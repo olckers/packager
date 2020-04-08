@@ -4,10 +4,8 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Core Saas API Configuration
+    | Packager Configuration
     |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for the Core components
     |
     | Parsable names in command manifest
     |
@@ -24,8 +22,6 @@ return [
     | %pluralupperfirst% - replace name with plural and first letter of name in uppercase
     */
 
-    'api_latest' => 1,
-    'api_namespace' => 'Api',
     'command_settings' => [
         'silent' => true,
         'table' => true,

@@ -1,5 +1,5 @@
 <?php
-namespace olckerstech\core\src\traits;
+namespace olckerstech\packager\src\traits;
 
 use Illuminate\Support\Str;
 

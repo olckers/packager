@@ -1,9 +1,9 @@
 <?php
 
-namespace olckerstech\core\src\Commands;
+namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\Command;
-use olckerstech\core\src\traits\commandParser;
+use olckerstech\packager\src\traits\commandParser;
 
 class ScaffoldMakeCommand extends Command
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace olckerstech\core\src\Commands;
+namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\Command;
 
