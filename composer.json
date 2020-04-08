@@ -1,0 +1,14 @@
+{
+    "name": "olckerstech/packager",
+    "description": "Automates Laravel package development",
+    "type": "library",
+    "license": "propriety",
+    "authors": [
+        {
+            "name": "Daniel Olckers",
+            "email": "olckers.tech@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

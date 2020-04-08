@@ -1,0 +1,104 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Repositories\Interfaces\DummyClassInterface;
+/*
+* Classes are stubbed out to match interface and returns only true.
+* Repositories and interfaces need to be registered in the RepositoryServiceProvider
+*/
+
+class DummyClass implements DummyClassInterface
+{
+    /**
+     * Get's item by it's ID
+     *
+     * @param uuid
+     */
+    public function get($id){
+        //
+    }
+
+    /**
+     * Get's a item by it's ID that has been deleted
+     *
+     * @param uuid
+     */
+    public function getTrashed($id){
+        //
+    }
+
+    /**
+     * Get's all items that has not been deleted
+     *
+     * @return mixed
+     */
+    public function all(){
+        //
+    }
+
+    /**
+     * Get's all items that has been deleted.
+     *
+     * @return mixed
+     */
+    public function allTrashedOnly(){
+        //
+    }
+
+    /**
+     * Get's all items including deleted items.
+     *
+     * @return mixed
+     */
+    public function allWithTrashed(){
+        //
+    }
+
+    /**
+     * Deletes a item.
+     *
+     * @param uuid
+     */
+    public function delete($id){
+        //
+    }
+
+    /**
+     * permanently deletes a item.
+     *
+     * @param uuid
+     */
+    public function destroy($id){
+        //
+    }
+
+    /**
+     * recovers a deleted item.
+     *
+     * @param uuid
+     */
+    public function recover($id){
+        //
+    }
+
+    /**
+     * Updates a item.
+     *
+     * @param uuid
+     * @param array
+     */
+    public function update($id, array $data){
+        //
+    }
+
+    /**
+     * Creates a item.
+     *
+     * @param uuid
+     * @param array
+     */
+    public function create($id, array $data){
+        //
+    }
+}
