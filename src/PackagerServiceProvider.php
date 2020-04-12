@@ -4,6 +4,7 @@ namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackageMakeCommand;
+use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMailMakeCommand;
 use olckerstech\packager\src\Commands\PackagerModelMakeCommand;
 use olckerstech\packager\src\Commands\PackagerNotificationMakeCommand;
@@ -48,6 +49,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerObserverMakeCommand::class, //Creates a new Observer class within a package
                 PackagerNotificationMakeCommand::class, //Creates a new Notification class within a package
                 PackagerMailMakeCommand::class, //Creates a new Mail for a package
+                PackagerListenerMakeCommand::class, //Creates a new Listener for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
