@@ -4,7 +4,7 @@ namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\Command;
 
-class PackageMakeCommand extends Command
+class PackagerMakeCommand extends Command
 {
     /**
      * The name and signature of the console command.

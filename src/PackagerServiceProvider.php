@@ -3,7 +3,8 @@
 namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
-use olckerstech\packager\src\Commands\PackageMakeCommand;
+use olckerstech\packager\src\Commands\PackagerMakeCommand;
+use olckerstech\packager\src\Commands\PackagerEventMakeCommand;
 use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
 use olckerstech\packager\src\Commands\PackagerJobMakeCommand;
 use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
@@ -40,7 +41,7 @@ class PackagerServiceProvider extends ServiceProvider
         //** START: Local environment only
         if($this->app->isLocal() && $this->app->runningInConsole()) {
             $this->commands([
-                PackageMakeCommand::class, //Creates a new package with stubs
+                PackagerMakeCommand::class, //Creates a new package with stubs
                 PackagerScaffoldMakeCommand::class, //Creates a new entity scaffold within a package
                 ScaffoldMakeCommand::class, //Creates a new entity scaffold within the normal app
                 PackagerModelMakeCommand::class, // Creates a new Eloquent user model within the desired package
@@ -54,6 +55,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerListenerMakeCommand::class, //Creates a new Listener for a package
                 PackagerJobMakeCommand::class, //Creates a new Job for a package
                 PackagerExceptionMakeCommand::class, //Creates a new Exception for a package
+                PackagerEventMakeCommand::class, //Creates a new Event for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
