@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ packageNameSpace }};
+
+use Exception;
+
+class DummyClass extends Exception
+{
+    //
+}

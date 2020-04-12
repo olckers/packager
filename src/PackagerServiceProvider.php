@@ -4,6 +4,7 @@ namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackageMakeCommand;
+use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
 use olckerstech\packager\src\Commands\PackagerJobMakeCommand;
 use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMailMakeCommand;
@@ -52,6 +53,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerMailMakeCommand::class, //Creates a new Mail for a package
                 PackagerListenerMakeCommand::class, //Creates a new Listener for a package
                 PackagerJobMakeCommand::class, //Creates a new Job for a package
+                PackagerExceptionMakeCommand::class, //Creates a new Exception for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
