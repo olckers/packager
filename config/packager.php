@@ -22,9 +22,11 @@ return [
     | %pluralupperfirst% - replace name with plural and first letter of name in uppercase
     */
 
+    'packager_working_directory' => 'packages',
     'command_settings' => [
         'silent' => true,
         'table' => true,
+        'max_attempts' => 2, //set to null for now max
     ],
     'command_manifest' => [
         'scaffold_make_command' => [
@@ -71,5 +73,17 @@ return [
             'before' => [],
             'after' => []
         ],
+    ],
+    'directory_filter' => [
+        'replace' => [
+            '.',
+            '..',
+            'DS_Store'
+        ],
+        'replace_with' => [
+            '',
+            '',
+            ''
+        ]
     ]
 ];

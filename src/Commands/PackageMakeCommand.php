@@ -11,7 +11,7 @@ class PackageMakeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'package:create
+    protected $signature = 'packager:create
         {name? : The name of the entity}';
 
     /**

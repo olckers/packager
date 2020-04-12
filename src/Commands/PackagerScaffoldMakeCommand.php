@@ -4,14 +4,14 @@ namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\Command;
 
-class PackageScaffoldMakeCommand extends Command
+class PackagerScaffoldMakeCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'package:scaffold
+    protected $signature = 'packager:scaffold
         {name? : The name of the entity}
         {--package= : The name of the package the scaffold is to be created in}';
 

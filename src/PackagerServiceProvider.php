@@ -4,7 +4,13 @@ namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackageMakeCommand;
-use olckerstech\packager\src\Commands\PackageScaffoldMakeCommand;
+use olckerstech\packager\src\Commands\PackagerModelMakeCommand;
+use olckerstech\packager\src\Commands\PackagerObserverMakeCommand;
+use olckerstech\packager\src\Commands\PackagerPolicyMakeCommand;
+use olckerstech\packager\src\Commands\PackagerProviderMakeCommand;
+use olckerstech\packager\src\Commands\PackagerRequestMakeCommand;
+use olckerstech\packager\src\Commands\PackagerResourceMakeCommand;
+use olckerstech\packager\src\Commands\PackagerScaffoldMakeCommand;
 use olckerstech\packager\src\Commands\ScaffoldMakeCommand;
 
 class PackagerServiceProvider extends ServiceProvider
@@ -30,9 +36,18 @@ class PackagerServiceProvider extends ServiceProvider
         if($this->app->isLocal() && $this->app->runningInConsole()) {
             $this->commands([
                 PackageMakeCommand::class, //Creates a new package with stubs
-                PackageScaffoldMakeCommand::class, //Creates a new entity scaffold within a package
+                PackagerScaffoldMakeCommand::class, //Creates a new entity scaffold within a package
                 ScaffoldMakeCommand::class, //Creates a new entity scaffold within the normal app
+                PackagerModelMakeCommand::class, // Creates a new Eloquent user model within the desired package
+                PackagerProviderMakeCommand::class, //Creates a new ServiceProvider class within a package
+                PackagerResourceMakeCommand::class, //Creates a new Resource class within a package
+                PackagerRequestMakeCommand::class, //Creates a new Request class within a package
+                PackagerPolicyMakeCommand::class, //Creates a new Policy class within a package
+                PackagerObserverMakeCommand::class, //Creates a new Observer class within a package
             ]);
+            /*
+             * OVERRIDE Illuminate\Foundation\Console commands for package purposes
+             */
 
             //Publish config file
             $this->publishes([
@@ -40,10 +55,10 @@ class PackagerServiceProvider extends ServiceProvider
             ], 'config');
 
             //Publish stubs
-            $this->publishes([
+         /*   $this->publishes([
                 __DIR__.'/../resources/stubs/' => '/stubs'
             ], 'stubs');
-
+*/
         }
         //** END: Local environment only
     }
