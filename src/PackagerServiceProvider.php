@@ -3,6 +3,7 @@
 namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
+use olckerstech\packager\src\Commands\PackagerComponentMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerEventMakeCommand;
 use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
@@ -56,6 +57,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerJobMakeCommand::class, //Creates a new Job for a package
                 PackagerExceptionMakeCommand::class, //Creates a new Exception for a package
                 PackagerEventMakeCommand::class, //Creates a new Event for a package
+                PackagerComponentMakeCommand::class, //Creates new component for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes

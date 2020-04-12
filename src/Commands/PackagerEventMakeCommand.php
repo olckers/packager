@@ -20,7 +20,7 @@ class PackagerEventMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new Event class';
+    protected $description = 'Create a new Event class for a package';
 
     /**
      * The name and signature of the console command.
