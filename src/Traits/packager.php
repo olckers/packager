@@ -188,9 +188,9 @@ trait packager
             $to = $this->str_replace_once('/temp_packages', '', $to);
             $package_dir = $this->str_replace_once('/'.$name.'.php', '', $to);
             $this->line('Moving created files to package...');
-            if (!file_exists($to)) {
+            if (!file_exists($package_dir)) {
                 if (!mkdir($package_dir, 0777, true) && !is_dir($package_dir)) {
-                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $package_dir));
+                    //throw new \RuntimeException(sprintf('Directory "%s" was not created', $package_dir));
                 }
             }
             copy($from, $to);
