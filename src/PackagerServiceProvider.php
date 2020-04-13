@@ -5,6 +5,7 @@ namespace olckerstech\packager\src;
 use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackagerChannelMakeCommand;
 use olckerstech\packager\src\Commands\PackagerComponentMakeCommand;
+use olckerstech\packager\src\Commands\PackagerControllerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerEventMakeCommand;
 use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
@@ -62,6 +63,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerComponentMakeCommand::class, //Creates new component for a package
                 PackagerChannelMakeCommand::class, //Creates new channel for a package
                 PackagerTestMakeCommand::class, //Creates a new test for a package
+                PackagerControllerMakeCommand::class, //
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes

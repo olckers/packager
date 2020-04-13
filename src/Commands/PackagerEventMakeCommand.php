@@ -53,9 +53,9 @@ class PackagerEventMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Exception: '.$this->argument('name'));
+        $this->info('Creating Event: '.$this->argument('name'));
         if (!$this->parsePackage()) {
-            $this->error('FAILED. Could not create Exception');
+            $this->error('FAILED. Could not create Event');
             return false;
         }
 
