@@ -19,6 +19,7 @@ use olckerstech\packager\src\Commands\PackagerProviderMakeCommand;
 use olckerstech\packager\src\Commands\PackagerRequestMakeCommand;
 use olckerstech\packager\src\Commands\PackagerResourceMakeCommand;
 use olckerstech\packager\src\Commands\PackagerScaffoldMakeCommand;
+use olckerstech\packager\src\Commands\PackagerTestMakeCommand;
 use olckerstech\packager\src\Commands\ScaffoldMakeCommand;
 
 class PackagerServiceProvider extends ServiceProvider
@@ -60,6 +61,7 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerEventMakeCommand::class, //Creates a new Event for a package
                 PackagerComponentMakeCommand::class, //Creates new component for a package
                 PackagerChannelMakeCommand::class, //Creates new channel for a package
+                PackagerTestMakeCommand::class, //Creates a new test for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
