@@ -131,7 +131,6 @@ return [
             'after' => [
                 'comment: Run "composer dump-autoload"',
                 'comment: Run "php artisan optimize:clear"',
-                'comment: You may have to register some of the files manually in the %upperfirst%ServiceProvider file.',
                 'line: Note only the most commonly used files are generated. Publish the config file and edit package_scaffold_make_command to change the manifest.',
                 'info: Scaffold for package entity %upperfirst% generated. Review table output above for any errors'
             ]

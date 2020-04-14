@@ -277,15 +277,28 @@ trait packager
     protected function replaceNamespace(&$stub, $name)
     {
         $searches = [
-            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyPackageNameSpace'],
-            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ packageNameSpace }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}'],
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyPackageNameSpace', 'DummyEntityName'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ packageNameSpace }}', '{{  entityName  }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}', '{{  entityName  }}'],
         ];
+
+        if($this->packagerPackage === null){
+            $dummyEntityName = 'REPLACE';
+        }else{
+            $dummyEntityName = $this->packagerPackage;
+        }
+
 
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
-                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(), $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier],
+                [
+                    $this->getNamespace($name),
+                    $this->rootNamespace(),
+                    $this->userProviderModel(),
+                    $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier,
+                    $dummyEntityName,
+                ],
                 $stub
             );
         }
