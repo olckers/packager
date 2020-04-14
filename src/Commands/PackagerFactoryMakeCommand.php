@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use olckerstech\packager\src\traits\commandParser;
 use olckerstech\packager\src\traits\packager;
 
-class PackagerControllerMakeCommand extends Command
+class PackagerFactoryMakeCommand extends Command
 {
     use packager;
     use commandParser;
@@ -15,44 +15,37 @@ class PackagerControllerMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'packager:controller';
+    protected $name = 'packager:factory';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    /*
-     *  {--model= : Generate a resource controller for the given model.}
-     *  {--parent= : Generate a nested resource controller class.}
-     */
-    protected $signature = 'packager:controller
-        {name : Name of the Controller}
-        {--package= : Fully qualified package name the Controller belongs to}
-        {--api : Exclude the create and edit methods from the controller.}
-        {--force : Create the class even if the controller already exists}
-        {--invokable : Generate a single method, invokable controller class.}
-        {--resource : Generate a resource controller class.}';
+    protected $signature = 'packager:factory
+        {name : Name of the Factory}
+        {--package= : Fully qualified package name the Factory belongs to}
+        {--model= : The name of the model}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Build a new controller for an entity in a package';
+    protected $description = 'Creates a new factory for a model in a package';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Controller';
+    protected $type = 'Factory';
 
     /**
      * Namespace modifier for this generator command instance
      *
      * @var string
      */
-    protected $packageNameSpaceModifier = 'src\\Controllers';
+    protected $packageNameSpaceModifier = 'database\\factories';
 
     /**
      * Create a new command instance.
@@ -71,25 +64,28 @@ class PackagerControllerMakeCommand extends Command
      */
     public function handle()
     {
-        $this->info('Creating Controller: ' . $this->argument('name'));
+        $this->info('Creating Factory: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
-            $this->error('FAILED. Could not create Controller');
+            $this->error('FAILED. Could not create Factory');
             return false;
         }
 
         $options = $this->parsePackageControllerOptions();
 
-        $result = $this->executeCommand('make:controller', $options);
-        if ($result === 'Success') {
-            if (!$this->copyAndDelete($this->argument('name'))) {
-                $this->error('FAILED. Could either not move and/or delete the created files');
-                return false;
-            }
-        } else {
-            $this->error($result);
+        if($this->createFolderIfNotExist(str_replace('\\', '/', $this->packageNameSpace.'/'.$this->packageNameSpace.'/'.$this->packageNameSpaceModifier))) {
+            $result = $this->executeCommand('make:factory', $options);
+        }else{
             return false;
         }
 
+        if($result !== 0){
+            return $result;
+        }
+
+        if (!$this->copyAndDelete($this->argument('name'))) {
+            $this->error('FAILED. Could either not move and/or delete the created files');
+            return false;
+        }
         return true;
     }
 
@@ -113,6 +109,21 @@ class PackagerControllerMakeCommand extends Command
         return $returnOptions;
     }
 
+    public function executeCommand($command, $options)
+    {
+        //$return = false;
+        try {
+            if (config('packager.command_settings.silent')) {
+                $return = $this->callSilent($command, $options);
+            } else {
+                $return = $this->call($command, $options);
+            }
+        } catch (\Exception $e) {
+            return 'Failed: ' . $e->getMessage();
+        }
+        return $return;
+    }
+
     /**
      * Copies the created files from the app directory to packages. Files in
      * app directory is deleted after successful copy.
@@ -122,17 +133,18 @@ class PackagerControllerMakeCommand extends Command
     public function copyAndDelete($name = false)
     {
         if ($name) {
-            $from = $this->laravel->basePath() . '/App/Http/Controllers/' . $name . '.php';
+            $from = $this->laravel->basePath() . '/database/factories/' . $name . '.php';
             $package_dir = base_path(str_replace('\\', '/', 'packages/' . $this->packageNameSpace . '/' . $this->packageNameSpaceModifier));
             $to = $package_dir . '/' . $name . '.php';
             $this->line('Moving created files to package...');
-            if (!file_exists($package_dir)) {
+            $this->createFolderIfNotExist($package_dir);
+          /*  if (!file_exists($package_dir)) {
                 if (!mkdir($package_dir, 0777, true) && !is_dir($package_dir)) {
                     //throw new \RuntimeException(sprintf('Directory "%s" was not created', $package_dir));
                 }
-            }
-            $this->line('Fixing namespace...');
-            $this->replaceControllerNamespace($from);
+            }*/
+            $this->line('Fixing use namespace...');
+            $this->replaceModelNameSpace($from, str_replace('Factory', '', $name));
             copy($from, $to);
             $this->line('Deleting temporary file...');
             unlink($from);
@@ -143,16 +155,17 @@ class PackagerControllerMakeCommand extends Command
 
     /**
      * Replace the namespace for the controller
-     * @param $controllerPath
+     * @param $factoryPath
+     * @param $modelName
      */
-    public function replaceControllerNamespace($controllerPath)
+    public function replaceModelNameSpace($factoryPath, $modelName)
     {
-        $contents = file_get_contents($controllerPath);
+        $contents = file_get_contents($factoryPath);
         $contents = str_replace(
-            'namespace App\Http\Controllers;',
-            'namespace ' . $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier . '; use App\Http\Controllers\Controller;',
+            'use App\\'.$modelName,
+            'use ' . $this->packageNameSpace . '\\src\\Models\\'. $modelName,
             $contents
         );
-        file_put_contents($controllerPath, $contents);
+        file_put_contents($factoryPath, $contents);
     }
 }

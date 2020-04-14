@@ -57,21 +57,21 @@ class PackagerComponentMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Component: '.$this->argument('name'));
+        $this->info('Creating Component: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Component');
             return false;
         }
 
-        if (parent::handle() === false && ! $this->option('force')) {
+        if (parent::handle() === false && !$this->option('force')) {
             return false;
         }
 
-        if (! $this->option('inline')) {
+        if (!$this->option('inline')) {
             $this->writeView();
         }
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -87,17 +87,17 @@ class PackagerComponentMakeCommand extends GeneratorCommand
     {
         $view = $this->getView();
 
-        $path = base_path('packages\\'.str_replace('/', '\\', $this->packageNameSpace)).'src\\resources\\views\\components\\'.$view;
+        $path = base_path('packages\\' . str_replace('/', '\\', $this->packageNameSpace)) . 'src\\resources\\views\\components\\' . $view;
         //$path = resource_path('views').'/'.str_replace('.', '/', 'components.'.$view);
 
-        if (! $this->files->isDirectory(dirname($path))) {
+        if (!$this->files->isDirectory(dirname($path))) {
             $this->files->makeDirectory(dirname($path), 0777, true, true);
         }
 
         file_put_contents(
-            $path.'.blade.php',
+            $path . '.blade.php',
             '<div>
-    <!-- '.Inspiring::quote().' -->
+    <!-- ' . Inspiring::quote() . ' -->
 </div>'
         );
     }
@@ -105,7 +105,7 @@ class PackagerComponentMakeCommand extends GeneratorCommand
     /**
      * Build the class with the given name.
      *
-     * @param  string  $name
+     * @param string $name
      * @return string
      */
     protected function buildClass($name)
@@ -113,14 +113,14 @@ class PackagerComponentMakeCommand extends GeneratorCommand
         if ($this->option('inline')) {
             return str_replace(
                 'DummyView',
-                "<<<'blade'\n<div>\n    ".Inspiring::quote()."\n</div>\nblade",
+                "<<<'blade'\n<div>\n    " . Inspiring::quote() . "\n</div>\nblade",
                 parent::buildClass($name)
             );
         }
 
         return str_replace(
             'DummyView',
-            'view(\'components.'.$this->getView().'\')',
+            'view(\'components.' . $this->getView() . '\')',
             parent::buildClass($name)
         );
     }

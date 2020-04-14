@@ -54,7 +54,7 @@ class PackagerModelMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Model: '.$this->argument('name'));
+        $this->info('Creating Model: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Model');
             return false;
@@ -62,7 +62,7 @@ class PackagerModelMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }

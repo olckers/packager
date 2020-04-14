@@ -55,7 +55,7 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Policy: '.$this->argument('name'));
+        $this->info('Creating Policy: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Policy');
             return false;
@@ -63,7 +63,7 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -92,19 +92,19 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
     /**
      * Replace the User model namespace.
      *
-     * @param  string  $stub
+     * @param string $stub
      * @return string
      */
     protected function replaceUserNamespace($stub)
     {
         $model = $this->userProviderModel();
 
-        if (! $model) {
+        if (!$model) {
             return $stub;
         }
 
         return str_replace(
-            $this->rootNamespace().'User',
+            $this->rootNamespace() . 'User',
             $model,
             $stub
         );
@@ -113,8 +113,8 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
     /**
      * Replace the model for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $model
+     * @param string $stub
+     * @param string $model
      * @return string
      */
     protected function replaceModel($stub, $model)
@@ -124,7 +124,7 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
         if (Str::startsWith($model, '\\')) {
             $namespacedModel = trim($model, '\\');
         } else {
-            $namespacedModel = $this->packageNameSpace.'\\src\\Models\\'.$model;//$this->laravel->getNamespace().$model;
+            $namespacedModel = $this->packageNameSpace . '\\src\\Models\\' . $model;//$this->laravel->getNamespace().$model;
         }
 
         $model = trim($model, '\\');//class_basename(trim($model, '\\'));
@@ -165,8 +165,8 @@ class PackagerPolicyMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->option('model')
-                    ? $this->resolveStubPath('/stubs/policy.stub')
-                    : $this->resolveStubPath('/stubs/policy.plain.stub');
+            ? $this->resolveStubPath('/stubs/policy.stub')
+            : $this->resolveStubPath('/stubs/policy.plain.stub');
     }
 
 }

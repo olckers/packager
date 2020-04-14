@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use olckerstech\packager\src\traits\commandParser;
 use olckerstech\packager\src\traits\packager;
 
-class PackagerControllerMakeCommand extends Command
+class PackagerMigrationMakeCommand extends Command
 {
     use packager;
     use commandParser;
@@ -15,7 +15,7 @@ class PackagerControllerMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'packager:controller';
+    protected $name = 'packager:migration';
     /**
      * The name and signature of the console command.
      *
@@ -25,34 +25,35 @@ class PackagerControllerMakeCommand extends Command
      *  {--model= : Generate a resource controller for the given model.}
      *  {--parent= : Generate a nested resource controller class.}
      */
-    protected $signature = 'packager:controller
+    protected $signature = 'packager:migration
         {name : Name of the Controller}
         {--package= : Fully qualified package name the Controller belongs to}
-        {--api : Exclude the create and edit methods from the controller.}
-        {--force : Create the class even if the controller already exists}
-        {--invokable : Generate a single method, invokable controller class.}
-        {--resource : Generate a resource controller class.}';
+        {--create= : The table to be created}
+        {--table= : The table to migrate}
+        {--path= : The location where the migration file should be created}
+        {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
+        {--fullpath : Output the full path of the migration}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Build a new controller for an entity in a package';
+    protected $description = 'Creates a new migration for an entity in a package';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Controller';
+    protected $type = 'Migration';
 
     /**
      * Namespace modifier for this generator command instance
      *
      * @var string
      */
-    protected $packageNameSpaceModifier = 'src\\Controllers';
+    protected $packageNameSpaceModifier = 'database\\migrations';
 
     /**
      * Create a new command instance.
@@ -71,23 +72,30 @@ class PackagerControllerMakeCommand extends Command
      */
     public function handle()
     {
-        $this->info('Creating Controller: ' . $this->argument('name'));
+        $this->info('Creating Migration: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
-            $this->error('FAILED. Could not create Controller');
+            $this->error('FAILED. Could not create Migration');
             return false;
         }
 
         $options = $this->parsePackageControllerOptions();
 
-        $result = $this->executeCommand('make:controller', $options);
-        if ($result === 'Success') {
-            if (!$this->copyAndDelete($this->argument('name'))) {
-                $this->error('FAILED. Could either not move and/or delete the created files');
-                return false;
-            }
-        } else {
-            $this->error($result);
+        if(!array_key_exists('--path', $options)){
+            $options += ['--path' =>
+                    str_replace('\\', '/',config('packager.packager_working_directory').
+                    '/'.$this->packageNameSpace.'/'.$this->packageNameSpaceModifier)
+                ];
+        }
+
+        if($this->createFolderIfNotExist($options['--path'])) {
+            $result = $this->executeCommand('make:migration', $options);
+        }else{
             return false;
+        }
+
+        if ($result !== 'Success' && $result !== 0) {
+                $this->error($result);
+                return false;
         }
 
         return true;
@@ -111,6 +119,21 @@ class PackagerControllerMakeCommand extends Command
         }
 
         return $returnOptions;
+    }
+
+    public function executeCommand($command, $options)
+    {
+        //$return = false;
+        try {
+            if (config('packager.command_settings.silent')) {
+                $return = $this->callSilent($command, $options);
+            } else {
+                $return = $this->call($command, $options);
+            }
+        } catch (\Exception $e) {
+            return 'Failed: ' . $e->getMessage();
+        }
+        return $return;
     }
 
     /**

@@ -51,7 +51,28 @@ return [
             'make:repository name=%upperfirst%Repository',
             'make:repository-interface name=%upperfirst%RepositoryInterface'
         ],
-        'package_make_command' => [],
+        'package_make_command' => [
+            'packager:provider name=%upperfirst%ServiceProvider --package=%packager%',
+            'packager:model name=%upperfirst% --package=%packager% --package=%packager%',
+            'packager:controller name=%upperfirst%Controller --api --package=%packager%',
+            'packager:policy name=%upperfirst%Policy --package=%packager% --model=%upperfirst%',
+            'packager:resource name=%upperfirst% --package=%packager%',
+            'packager:resource name=%upperfirst%Collection --package=%packager% --collection',
+            'packager:request name=%upperfirst%Request --package=%packager%',
+            'packager:observer name=%upperfirst%Observer --model=%upperfirst% --package=%packager%',
+            'packager:notification name=%upperfirst%Notification --package=%packager%',
+            'packager:event name=%upperfirst%Event --package=%packager%',
+            'packager:listener name=%upperfirst%Listener --event=upperfirst%Event --package=%packager%',
+            'packager:exception name=%upperfirst%Exception --package=%packager% --report --render',
+            'packager:channel name=%upperfirst%Channel --package=%packager%',
+            'packager:test name=%upperfirst%Test --package=%packager%',
+            'packager:test name=%upperfirst%Test --package=%packager% --unit',
+            'packager:repository name=%upperfirst%Repository --package=%packager%',
+            'packager:repository-interface name=%upperfirst%RepositoryInterface --package=%packager%',
+            'packager:migration name=create_%plurallowercase%_table --package=%packager%',
+            'packager:factory name=%upperfirst% --package=%packager% --model=%upperfirst%',
+
+        ],
         'package_scaffold_make_command' => [],
     ],
     'command_messages' => [
@@ -66,8 +87,18 @@ return [
             ]
         ],
         'package_make_command' => [
-            'before' => [],
-            'after' => []
+            'before' => [
+                'info: Building package: %upperfirst%',
+            ],
+            'after' => [
+                'comment: Run "composer dump-autoload"',
+                'comment: Run "php artisan optimize:clear"',
+                'comment: Run "php artisan list"',
+                'comment: Add %upperfirst%ServiceProvider to config/app.php if not auto discovered.',
+                'comment: You may have to register some of the files manually in the %upperfirst%ServiceProvider file.',
+                'line: The following items are not included in the default manifest: Jobs, Mails. You can generate these if you need them.',
+                'info: Package %upperfirst% generated. Review table output above for any errors'
+            ]
         ],
         'package_scaffold_make_command' => [
             'before' => [],

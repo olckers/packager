@@ -2,8 +2,6 @@
 
 namespace olckerstech\packager\src\traits;
 
-use Illuminate\Support\Str;
-
 trait packager
 {
     protected $packagerDirectory = false;
@@ -22,7 +20,7 @@ trait packager
     public function parsePackage()
     {
         if (($this->option('package') !== null) && $this->checkProvidedPackageName($this->option('package'))) {
-            if($this->doesNotExistAndCantCreate()){
+            if ($this->doesNotExistAndCantCreate()) {
                 return false;
             }
             return true;
@@ -30,17 +28,17 @@ trait packager
 
         $this->packagerDirectory = $this->laravel->basePath(config('packager.packager_working_directory'));
 
-        if(!$this->getVendor()){
+        if (!$this->getVendor()) {
             return false;
         }
 
-        if(!$this->getPackage($this->packagerVendor)){
+        if (!$this->getPackage($this->packagerVendor)) {
             return false;
         }
 
         $this->packageNameSpace = $this->packagerVendor . '\\' . $this->packagerPackage;
 
-        if($this->doesNotExistAndCantCreate()){
+        if ($this->doesNotExistAndCantCreate()) {
             return false;
         }
 
@@ -54,7 +52,7 @@ trait packager
      */
     public function doesNotExistAndCantCreate()
     {
-        if(!$this->checkIfPackageExists() && !$this->checkForCanCreate()){
+        if (!$this->checkIfPackageExists() && !$this->checkForCanCreate()) {
             return true;
         }
 
@@ -167,7 +165,7 @@ trait packager
     {
         $filePath = str_replace('\\', '/', $this->packageNameSpace);
 
-        if(file_exists(base_path('packages/'.$filePath))){
+        if (file_exists(base_path('packages/' . $filePath))) {
             return true;
         }
 
@@ -182,11 +180,11 @@ trait packager
      */
     public function copyAndDelete($name = false)
     {
-        if ($name){
-            $from = base_path(str_replace('\\', '/' ,$this->getDefaultNamespace('App').'/'.$name.'.php'));
+        if ($name) {
+            $from = base_path(str_replace('\\', '/', $this->getDefaultNamespace('App') . '/' . $name . '.php'));
             $to = $this->str_replace_once('App', 'packages', $from);
             $to = $this->str_replace_once('/temp_packages', '', $to);
-            $package_dir = $this->str_replace_once('/'.$name.'.php', '', $to);
+            $package_dir = $this->str_replace_once('/' . $name . '.php', '', $to);
             $this->line('Moving created files to package...');
             if (!file_exists($package_dir)) {
                 if (!mkdir($package_dir, 0777, true) && !is_dir($package_dir)) {
@@ -196,7 +194,7 @@ trait packager
             copy($from, $to);
             $this->line('Deleting temporary file...');
             unlink($from);
-            $this->line('Deleting temporary directory: '.base_path('App/temp_packages'));
+            $this->line('Deleting temporary directory: ' . base_path('App/temp_packages'));
             $this->rrmdir(base_path('App/temp_packages'));
             $this->line('Done');
         }
@@ -211,9 +209,10 @@ trait packager
      * @param $string
      * @return string|string[]
      */
-    public function str_replace_once($str_pattern, $str_replacement, $string){
+    public function str_replace_once($str_pattern, $str_replacement, $string)
+    {
 
-        if (strpos($string, $str_pattern) !== false){
+        if (strpos($string, $str_pattern) !== false) {
             $occurrence = strpos($string, $str_pattern);
             return substr_replace($string, $str_replacement, strpos($string, $str_pattern), strlen($str_pattern));
         }
@@ -226,7 +225,8 @@ trait packager
      *
      * @param $src
      */
-    public function rrmdir($src) {
+    public function rrmdir($src)
+    {
         if (file_exists($src)) {
             $dir = opendir($src);
             while (false !== ($file = readdir($dir))) {
@@ -252,7 +252,7 @@ trait packager
      */
     protected function resolveStubPath($stub)
     {
-        return $this->laravel->basePath('packages/olckerstech/packager/resources/'.trim($stub, '/'));
+        return $this->laravel->basePath('packages/olckerstech/packager/resources/' . trim($stub, '/'));
     }
 
     /**
@@ -264,14 +264,14 @@ trait packager
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\temp_packages\\' . $this->packageNameSpace .'\\'.$this->packageNameSpaceModifier;
+        return $rootNamespace . '\temp_packages\\' . $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier;
     }
 
     /**
      * Replace the namespace for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $name
+     * @param string $stub
+     * @param string $name
      * @return $this
      */
     protected function replaceNamespace(&$stub, $name)
@@ -285,7 +285,7 @@ trait packager
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
-                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(), $this->packageNameSpace.'\\'.$this->packageNameSpaceModifier],
+                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(), $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier],
                 $stub
             );
         }

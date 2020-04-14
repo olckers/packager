@@ -45,7 +45,7 @@ class PackagerTestMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $packageNameSpaceModifier = 'src\\Tests';
+    protected $packageNameSpaceModifier = 'tests';
 
     /**
      * Execute the console command.
@@ -55,7 +55,7 @@ class PackagerTestMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Test: '.$this->argument('name'));
+        $this->info('Creating Test: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Test');
             return false;
@@ -63,7 +63,7 @@ class PackagerTestMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -78,21 +78,21 @@ class PackagerTestMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->option('unit')
-                    ? $this->resolveStubPath('/stubs/test.unit.stub')
-                    : $this->resolveStubPath('/stubs/test.stub');
+            ? $this->resolveStubPath('/stubs/test.unit.stub')
+            : $this->resolveStubPath('/stubs/test.stub');
     }
 
 
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param string $name
      * @return string
      */
     protected function getPath($name)
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        return str_replace('\\', '/', 'App\\'.$name.'.php');
+        return str_replace('\\', '/', 'App\\' . $name . '.php');
     }
 
     /**
@@ -103,11 +103,11 @@ class PackagerTestMakeCommand extends GeneratorCommand
      */
     public function copyAndDelete($name = false)
     {
-        if ($name){
-            $from = base_path(str_replace('\\', '/' ,$this->getDefaultNamespace('App').'/'.$name.'.php'));
+        if ($name) {
+            $from = base_path(str_replace('\\', '/', $this->getDefaultNamespace('App') . '/' . $name . '.php'));
             $to = $this->str_replace_once('App', 'packages', $from);
             $to = $this->str_replace_once('/temp_packages', '', $to);
-            $package_dir = $this->str_replace_once('/'.$name.'.php', '', $to);
+            $package_dir = $this->str_replace_once('/' . $name . '.php', '', $to);
             /*
              * Override to provide the Feature / Unit namespace
              */
@@ -117,7 +117,7 @@ class PackagerTestMakeCommand extends GeneratorCommand
             } else {
                 $package_dir .= '/Feature';
             }
-            $to = $package_dir.'/'.$name.'.php';
+            $to = $package_dir . '/' . $name . '.php';
 
             $this->line('Moving created files to package...');
             if (!file_exists($package_dir)) {
@@ -128,7 +128,7 @@ class PackagerTestMakeCommand extends GeneratorCommand
             copy($from, $to);
             $this->line('Deleting temporary file...');
             unlink($from);
-            $this->line('Deleting temporary directory: '.base_path('App/temp_packages'));
+            $this->line('Deleting temporary directory: ' . base_path('App/temp_packages'));
             $this->rrmdir(base_path('App/temp_packages'));
             $this->line('Done');
         }
@@ -138,8 +138,8 @@ class PackagerTestMakeCommand extends GeneratorCommand
     /**
      * Replace the namespace for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $name
+     * @param string $stub
+     * @param string $name
      * @return $this
      */
     protected function replaceNamespace(&$stub, $name)
@@ -154,9 +154,9 @@ class PackagerTestMakeCommand extends GeneratorCommand
          * Override to provide the Feature / Unit namespace
          */
         if ($this->option('unit')) {
-            $tempNameSpace = $this->packageNameSpace.'\\'.$this->packageNameSpaceModifier.'\Unit';
+            $tempNameSpace = $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier . '\Unit';
         } else {
-            $tempNameSpace = $this->packageNameSpace.'\\'.$this->packageNameSpaceModifier.'\Feature';
+            $tempNameSpace = $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier . '\Feature';
         }
 
         foreach ($searches as $search) {

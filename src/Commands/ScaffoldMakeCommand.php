@@ -44,7 +44,7 @@ class ScaffoldMakeCommand extends Command
         $name = $this->argument('name');
         $options = $this->options();
 
-        $display_table = config('core.command_settings.table');
+        $display_table = config('packager.command_settings.table');
 
         $headers = ['Command', 'Status'];
         $table = [];
@@ -58,11 +58,11 @@ class ScaffoldMakeCommand extends Command
             /*
              * Display before messages
              */
-            $this->parseMessages(config('core.command_messages.scaffold_make_command.before'), $name);
+            $this->parseMessages(config('packager.command_messages.scaffold_make_command.before'), $name);
             /*
              * Parse commands
              */
-            $commands = config('core.command_manifest.scaffold_make_command');
+            $commands = config('packager.command_manifest.scaffold_make_command');
 
             $bar = $this->output->createProgressBar(count($commands));
 
@@ -78,11 +78,13 @@ class ScaffoldMakeCommand extends Command
             /*
              * Display table summary
              */
-            $this->table($headers, $table);
+            if ($display_table) {
+                $this->table($headers, $table);
+            }
             /*
              * Display after messages
              */
-            $this->parseMessages(config('core.command_messages.scaffold_make_command.after'), $name);
+            $this->parseMessages(config('packager.command_messages.scaffold_make_command.after'), $name);
         } else {
             $this->error('Name for scaffold entity not provided. Operation aborted.');
         }

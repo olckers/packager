@@ -6,17 +6,21 @@ use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackagerChannelMakeCommand;
 use olckerstech\packager\src\Commands\PackagerComponentMakeCommand;
 use olckerstech\packager\src\Commands\PackagerControllerMakeCommand;
+use olckerstech\packager\src\Commands\PackagerFactoryMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerEventMakeCommand;
 use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
 use olckerstech\packager\src\Commands\PackagerJobMakeCommand;
 use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMailMakeCommand;
+use olckerstech\packager\src\Commands\PackagerMigrationMakeCommand;
 use olckerstech\packager\src\Commands\PackagerModelMakeCommand;
 use olckerstech\packager\src\Commands\PackagerNotificationMakeCommand;
 use olckerstech\packager\src\Commands\PackagerObserverMakeCommand;
 use olckerstech\packager\src\Commands\PackagerPolicyMakeCommand;
 use olckerstech\packager\src\Commands\PackagerProviderMakeCommand;
+use olckerstech\packager\src\Commands\PackagerRepositoryInterfaceMakeCommand;
+use olckerstech\packager\src\Commands\PackagerRepositoryMakeCommand;
 use olckerstech\packager\src\Commands\PackagerRequestMakeCommand;
 use olckerstech\packager\src\Commands\PackagerResourceMakeCommand;
 use olckerstech\packager\src\Commands\PackagerScaffoldMakeCommand;
@@ -32,7 +36,9 @@ class PackagerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        if ($this->app['config']->get('packager') === null) {
+            $this->app['config']->set('packager', require __DIR__.'/../config/packager.php');
+        }
     }
 
     /**
@@ -43,7 +49,7 @@ class PackagerServiceProvider extends ServiceProvider
     public function boot()
     {
         //** START: Local environment only
-        if($this->app->isLocal() && $this->app->runningInConsole()) {
+        if ($this->app->isLocal() && $this->app->runningInConsole()) {
             $this->commands([
                 PackagerMakeCommand::class, //Creates a new package with stubs
                 PackagerScaffoldMakeCommand::class, //Creates a new entity scaffold within a package
@@ -63,7 +69,11 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerComponentMakeCommand::class, //Creates new component for a package
                 PackagerChannelMakeCommand::class, //Creates new channel for a package
                 PackagerTestMakeCommand::class, //Creates a new test for a package
-                PackagerControllerMakeCommand::class, //
+                PackagerControllerMakeCommand::class, //Creates a new controller for a package
+                PackagerRepositoryMakeCommand::class, //Creates a new repository for a package
+                PackagerRepositoryInterfaceMakeCommand::class, //Creates a new repository interface for a packager repository
+                PackagerMigrationMakeCommand::class, //Creates a new migration for a package
+                PackagerFactoryMakeCommand::class, //Creates a new model factory for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
@@ -71,14 +81,14 @@ class PackagerServiceProvider extends ServiceProvider
 
             //Publish config file
             $this->publishes([
-                __DIR__.'/../config/packager.php' => config_path('packager.php')
+                __DIR__ . '/../config/packager.php' => config_path('packager.php')
             ], 'config');
 
             //Publish stubs
-         /*   $this->publishes([
-                __DIR__.'/../resources/stubs/' => '/stubs'
-            ], 'stubs');
-*/
+            /*   $this->publishes([
+                   __DIR__.'/../resources/stubs/' => '/stubs'
+               ], 'stubs');
+   */
         }
         //** END: Local environment only
     }

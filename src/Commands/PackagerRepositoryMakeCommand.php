@@ -3,10 +3,9 @@
 namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Str;
 use olckerstech\packager\src\traits\packager;
 
-class PackagerResourceMakeCommand extends GeneratorCommand
+class PackagerRepositoryMakeCommand extends GeneratorCommand
 {
     use packager;
     /**
@@ -14,38 +13,36 @@ class PackagerResourceMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'packager:resource';
-
+    protected $name = 'packager:repository';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new resource for a package';
+    protected $description = 'Create a new repository class for a package';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'packager:resource
-            {name : Name of the Resource}
-            {--package= : Fully qualified package name the Resource belongs to}
-            {--collection : Create a resource collection}';
+    protected $signature = 'packager:repository
+                    {name : Name of the Repository}
+                    {--package= : Fully qualified package name the Repository belongs to}';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Resource';
+    protected $type = 'Repository';
 
     /**
      * Namespace modifier for this generator command instance
      *
      * @var string
      */
-    protected $packageNameSpaceModifier = 'src\\Resources';
+    protected $packageNameSpaceModifier = 'src\\Repositories';
 
     /**
      * Execute the console command.
@@ -55,12 +52,9 @@ class PackagerResourceMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        if ($this->collection()) {
-            $this->type = 'Resource collection';
-        }
-        $this->info('Creating Resource: ' . $this->argument('name'));
+        $this->info('Creating Repository: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
-            $this->error('FAILED. Could not create Resource');
+            $this->error('FAILED. Could not create Repository');
             return false;
         }
 
@@ -71,7 +65,6 @@ class PackagerResourceMakeCommand extends GeneratorCommand
             return false;
         }
         return true;
-
     }
 
     /**
@@ -81,20 +74,6 @@ class PackagerResourceMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->collection()
-            ? $this->resolveStubPath('/stubs/resource-collection.stub')
-            : $this->resolveStubPath('/stubs/resource.stub');
+        return $this->resolveStubPath('/stubs/repository.stub');
     }
-
-    /**
-     * Determine if the command is generating a resource collection.
-     *
-     * @return bool
-     */
-    protected function collection()
-    {
-        return $this->option('collection') ||
-            Str::endsWith($this->argument('name'), 'Collection');
-    }
-
 }

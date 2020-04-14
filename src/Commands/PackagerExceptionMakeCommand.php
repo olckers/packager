@@ -56,7 +56,7 @@ class PackagerExceptionMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Exception: '.$this->argument('name'));
+        $this->info('Creating Exception: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Exception');
             return false;
@@ -64,7 +64,7 @@ class PackagerExceptionMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -93,11 +93,11 @@ class PackagerExceptionMakeCommand extends GeneratorCommand
     /**
      * Determine if the class already exists.
      *
-     * @param  string  $rawName
+     * @param string $rawName
      * @return bool
      */
     protected function alreadyExists($rawName)
     {
-        return class_exists($this->packageNameSpace.'\\Exceptions\\'.$rawName);
+        return class_exists($this->packageNameSpace . '\\Exceptions\\' . $rawName);
     }
 }

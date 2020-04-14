@@ -55,7 +55,7 @@ class PackagerJobMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Job: '.$this->argument('name'));
+        $this->info('Creating Job: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Job');
             return false;
@@ -63,7 +63,7 @@ class PackagerJobMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -79,8 +79,8 @@ class PackagerJobMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->option('sync')
-                        ? $this->resolveStubPath('/stubs/job.stub')
-                        : $this->resolveStubPath('/stubs/job.queued.stub');
+            ? $this->resolveStubPath('/stubs/job.stub')
+            : $this->resolveStubPath('/stubs/job.queued.stub');
     }
 
 }

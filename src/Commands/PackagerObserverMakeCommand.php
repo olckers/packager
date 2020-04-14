@@ -56,7 +56,7 @@ class PackagerObserverMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Observer: '.$this->argument('name'));
+        $this->info('Creating Observer: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Observer');
             return false;
@@ -64,7 +64,7 @@ class PackagerObserverMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -96,22 +96,22 @@ class PackagerObserverMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->option('model')
-                    ? $this->resolveStubPath('/stubs/observer.stub')
-                    : $this->resolveStubPath('/stubs/observer.plain.stub');
+            ? $this->resolveStubPath('/stubs/observer.stub')
+            : $this->resolveStubPath('/stubs/observer.plain.stub');
     }
 
     /**
      * Replace the model for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $model
+     * @param string $stub
+     * @param string $model
      * @return string
      */
     protected function replaceModel($stub, $model)
     {
         $model = str_replace('/', '\\', $model);
 
-        $namespaceModel = $this->packageNameSpace.'\\src\\Models\\'.$model;
+        $namespaceModel = $this->packageNameSpace . '\\src\\Models\\' . $model;
 
         if (Str::startsWith($model, '\\')) {
             $stub = str_replace('NamespacedDummyModel', trim($model, '\\'), $stub);

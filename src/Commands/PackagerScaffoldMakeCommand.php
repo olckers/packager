@@ -47,17 +47,17 @@ class PackagerScaffoldMakeCommand extends Command
             $name = $this->ask('Entity name: ');
         }
 
-        if(isset($name)) {
-            if(!isset($options['package']) || $options['package'] === false){
+        if (isset($name)) {
+            if (!isset($options['package']) || $options['package'] === false) {
                 $package = $this->ask('Package name: ');
-            }else{
+            } else {
                 $package = $options['package'];
             }
             $this->info('Building scaffold for entity: ' . $name . ' in package: ' . $package);
 
 
             $this->info('Scaffold completed. See table below for generated files and their locations.');
-        }else{
+        } else {
             $this->error('Name for scaffold entity not provided. Operation aborted.');
         }
 

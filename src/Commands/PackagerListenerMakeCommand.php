@@ -57,7 +57,7 @@ class PackagerListenerMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Listener: '.$this->argument('name'));
+        $this->info('Creating Listener: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
             $this->error('FAILED. Could not create Listener');
             return false;
@@ -65,7 +65,7 @@ class PackagerListenerMakeCommand extends GeneratorCommand
 
         parent::handle();
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -84,12 +84,12 @@ class PackagerListenerMakeCommand extends GeneratorCommand
     {
         $event = $this->option('event');
 
-        if (! Str::startsWith($event, [
+        if (!Str::startsWith($event, [
             $this->laravel->getNamespace(),
             'Illuminate',
             '\\',
         ])) {
-            $event = str_replace('/', '\\',$this->packageNameSpace).'\\src\\Events\\'.$event;
+            $event = str_replace('/', '\\', $this->packageNameSpace) . '\\src\\Events\\' . $event;
         }
 
         $stub = str_replace(
@@ -110,19 +110,19 @@ class PackagerListenerMakeCommand extends GeneratorCommand
     {
         if ($this->option('queued')) {
             return $this->option('event')
-                        ? $this->resolveStubPath('/stubs/listener-queued.stub')
-                        : $this->resolveStubPath('/stubs/listener-queued-duck.stub');
+                ? $this->resolveStubPath('/stubs/listener-queued.stub')
+                : $this->resolveStubPath('/stubs/listener-queued-duck.stub');
         }
 
         return $this->option('event')
-                    ? $this->resolveStubPath('/stubs/listener.stub')
-                    : $this->resolveStubPath('/stubs/listener-duck.stub');
+            ? $this->resolveStubPath('/stubs/listener.stub')
+            : $this->resolveStubPath('/stubs/listener-duck.stub');
     }
 
     /**
      * Determine if the class already exists.
      *
-     * @param  string  $rawName
+     * @param string $rawName
      * @return bool
      */
     protected function alreadyExists($rawName)

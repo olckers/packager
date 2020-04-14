@@ -55,9 +55,9 @@ class PackagerNotificationMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->info('Creating Observer: '.$this->argument('name'));
+        $this->info('Creating Notification: ' . $this->argument('name'));
         if (!$this->parsePackage()) {
-            $this->error('FAILED. Could not create Observer');
+            $this->error('FAILED. Could not create Notification');
             return false;
         }
 
@@ -69,7 +69,7 @@ class PackagerNotificationMakeCommand extends GeneratorCommand
             $this->writeMarkdownTemplate();
         }
 
-        if(!$this->copyAndDelete($this->argument('name'))){
+        if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;
         }
@@ -84,7 +84,7 @@ class PackagerNotificationMakeCommand extends GeneratorCommand
      */
     protected function writeMarkdownTemplate()
     {
-        $path = base_path('packages/'.str_replace('\\', '/', $this->packageNameSpace).'/resources/views/Notifications/' . str_replace('.', '/', $this->option('markdown'))) . '.blade.php';
+        $path = base_path('packages/' . str_replace('\\', '/', $this->packageNameSpace) . '/resources/views/Notifications/' . str_replace('.', '/', $this->option('markdown'))) . '.blade.php';
 
         if (!$this->files->isDirectory(dirname($path))) {
             $this->files->makeDirectory(dirname($path), 0755, true);

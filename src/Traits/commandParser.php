@@ -1,4 +1,5 @@
 <?php
+
 namespace olckerstech\packager\src\traits;
 
 use Illuminate\Support\Str;
@@ -24,8 +25,8 @@ trait commandParser
 
             if ($options_size > 0) {
                 $i = 0;
-                foreach($collection as $item){
-                    if($i !== 0) {
+                foreach ($collection as $item) {
+                    if ($i !== 0) {
                         $options_array += $this->parseOption($item);
                     }
                     $i++;
@@ -45,14 +46,13 @@ trait commandParser
     public function executeCommand($command, $options)
     {
         try {
-            $silent = config('core.command_settings.silent');
-            if ($silent) {
+            if (config('packager.command_settings.silent')) {
                 $this->callSilent($command, $options);
             } else {
                 $this->call($command, $options);
             }
         } catch (\Exception $e) {
-            return 'Failed: '.$e->getMessage();
+            return 'Failed: ' . $e->getMessage();
         }
         return 'Success';
     }
@@ -96,6 +96,7 @@ trait commandParser
             '%plurallowercase%',
             '%pluraluppercase%',
             '%pluralupperfirst%',
+            '%packager%',
         ];
 
         $replace_with = [
@@ -108,6 +109,7 @@ trait commandParser
             Str::plural(Str::lower($name)),
             Str::plural(Str::upper($name)),
             Str::plural(Str::ucfirst($name)),
+            $this->getPackagerVendor() . '/' . $this->getPackagerPackage(),
         ];
 
         if (is_array($item)) {
@@ -125,14 +127,30 @@ trait commandParser
         return $return;
     }
 
+    public function getPackagerVendor()
+    {
+        if (isset($this->packagerVendor)) {
+            return $this->packagerVendor;
+        }
+        return 'unknown';
+    }
+
+    public function getPackagerPackage()
+    {
+        if (isset($this->packagerPackage)) {
+            return $this->packagerPackage;
+        }
+        return 'unknown';
+    }
+
     public function parseMessages($messages, $name)
     {
-        if(isset($messages)){
-            if(is_array($messages)){
-                foreach($messages as $message){
+        if (isset($messages)) {
+            if (is_array($messages)) {
+                foreach ($messages as $message) {
                     $this->displayMessage($this->parsePlaceholders($message, $name));
                 }
-            }else{
+            } else {
                 $this->displayMessage($this->parsePlaceholders($messages, $name));
             }
         }
@@ -151,9 +169,9 @@ trait commandParser
          */
 
         $type = strstr($message, ':', true);
-        $message = str_replace($type.': ', '', $message);
+        $message = str_replace($type . ': ', '', $message);
 
-        switch ($type){
+        switch ($type) {
             case 'line':
                 $this->line($message);
                 break;
@@ -171,6 +189,23 @@ trait commandParser
                 break;
         }
 
+    }
+
+    /**
+     * Checks if a folder path exists. If not, creates the path
+     *
+     * @param $path
+     * @return bool
+     */
+    public function createFolderIfNotExist($path)
+    {
+        if (!file_exists($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
+            //throw new \RuntimeException(sprintf('Directory "%s" was not created', $package_dir));
+            $this->error('The directory: '.$path.' could not be created');
+            return false;
+        }
+
+        return true;
     }
 
 }
