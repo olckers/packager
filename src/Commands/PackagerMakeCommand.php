@@ -78,6 +78,15 @@ class PackagerMakeCommand extends Command
         $this->line(' Done');
 
         /*
+         * Create config file
+         */
+        $this->comment('Creating config file...');
+        $config_dir = base_path(str_replace('\\', '/','packages/'.$this->packageNameSpace.'\\config'));
+        $this->createFolderIfNotExist($config_dir);
+        $stub_dir = base_path(str_replace('\\', '/', 'packages/olckerstech/packager/resources/stubs'));
+        copy($stub_dir.'/config.stub', $config_dir.'/'.$name.'.php');
+
+        /*
          * Display table summary
          */
         if ($display_table) {
@@ -135,11 +144,6 @@ class PackagerMakeCommand extends Command
         }
 
         return true;
-    }
-
-    public function createPackageFolders()
-    {
-
     }
 
     /**

@@ -70,10 +70,34 @@ return [
             'packager:repository name=%upperfirst%Repository --package=%packager%',
             'packager:repository-interface name=%upperfirst%RepositoryInterface --package=%packager%',
             'packager:migration name=create_%plurallowercase%_table --package=%packager%',
-            'packager:factory name=%upperfirst% --package=%packager% --model=%upperfirst%',
+            'packager:factory name=%upperfirst%Factory --package=%packager% --model=%upperfirst%',
+            'packager:seeder name=%upperfirst%Seeder --package=%packager%',
+            'packager:middleware name=%upperfirst% --package=%packager%',
+            'packager:command name=%upperfirst%Command --package=%packager%',
 
         ],
-        'package_scaffold_make_command' => [],
+        'package_scaffold_make_command' => [
+            'packager:model name=%upperfirst% --package=%packager% --package=%packager%',
+            'packager:controller name=%upperfirst%Controller --api --package=%packager%',
+            'packager:policy name=%upperfirst%Policy --package=%packager% --model=%upperfirst%',
+            'packager:resource name=%upperfirst% --package=%packager%',
+            'packager:resource name=%upperfirst%Collection --package=%packager% --collection',
+            'packager:request name=%upperfirst%Request --package=%packager%',
+            'packager:observer name=%upperfirst%Observer --model=%upperfirst% --package=%packager%',
+            'packager:notification name=%upperfirst%Notification --package=%packager%',
+            'packager:event name=%upperfirst%Event --package=%packager%',
+            'packager:listener name=%upperfirst%Listener --event=upperfirst%Event --package=%packager%',
+            'packager:exception name=%upperfirst%Exception --package=%packager% --report --render',
+            'packager:test name=%upperfirst%Test --package=%packager%',
+            'packager:test name=%upperfirst%Test --package=%packager% --unit',
+            'packager:repository name=%upperfirst%Repository --package=%packager%',
+            'packager:repository-interface name=%upperfirst%RepositoryInterface --package=%packager%',
+            'packager:migration name=create_%plurallowercase%_table --package=%packager%',
+            'packager:factory name=%upperfirst%Factory --package=%packager% --model=%upperfirst%',
+            'packager:seeder name=%upperfirst%Seeder --package=%packager%',
+            'packager:middleware name=%upperfirst% --package=%packager%',
+            'packager:command name=%upperfirst%Command --package=%packager%',
+        ],
     ],
     'command_messages' => [
         'scaffold_make_command' => [
@@ -101,8 +125,16 @@ return [
             ]
         ],
         'package_scaffold_make_command' => [
-            'before' => [],
-            'after' => []
+            'before' => [
+                'info: Building package scaffold for entity: %upperfirst%',
+            ],
+            'after' => [
+                'comment: Run "composer dump-autoload"',
+                'comment: Run "php artisan optimize:clear"',
+                'comment: You may have to register some of the files manually in the %upperfirst%ServiceProvider file.',
+                'line: Note only the most commonly used files are generated. Publish the config file and edit package_scaffold_make_command to change the manifest.',
+                'info: Scaffold for package entity %upperfirst% generated. Review table output above for any errors'
+            ]
         ],
     ],
     'directory_filter' => [

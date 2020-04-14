@@ -4,6 +4,7 @@ namespace olckerstech\packager\src;
 
 use Illuminate\Support\ServiceProvider;
 use olckerstech\packager\src\Commands\PackagerChannelMakeCommand;
+use olckerstech\packager\src\Commands\PackagerCommandMakeCommand;
 use olckerstech\packager\src\Commands\PackagerComponentMakeCommand;
 use olckerstech\packager\src\Commands\PackagerControllerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerFactoryMakeCommand;
@@ -13,6 +14,7 @@ use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
 use olckerstech\packager\src\Commands\PackagerJobMakeCommand;
 use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMailMakeCommand;
+use olckerstech\packager\src\Commands\PackagerMiddlewareMakeCommand;
 use olckerstech\packager\src\Commands\PackagerMigrationMakeCommand;
 use olckerstech\packager\src\Commands\PackagerModelMakeCommand;
 use olckerstech\packager\src\Commands\PackagerNotificationMakeCommand;
@@ -24,6 +26,7 @@ use olckerstech\packager\src\Commands\PackagerRepositoryMakeCommand;
 use olckerstech\packager\src\Commands\PackagerRequestMakeCommand;
 use olckerstech\packager\src\Commands\PackagerResourceMakeCommand;
 use olckerstech\packager\src\Commands\PackagerScaffoldMakeCommand;
+use olckerstech\packager\src\Commands\PackagerSeederMakeCommand;
 use olckerstech\packager\src\Commands\PackagerTestMakeCommand;
 use olckerstech\packager\src\Commands\ScaffoldMakeCommand;
 
@@ -74,6 +77,9 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerRepositoryInterfaceMakeCommand::class, //Creates a new repository interface for a packager repository
                 PackagerMigrationMakeCommand::class, //Creates a new migration for a package
                 PackagerFactoryMakeCommand::class, //Creates a new model factory for a package
+                PackagerSeederMakeCommand::class, //Create a new seeder for a package
+                PackagerMiddlewareMakeCommand::class, //Create a new middleware class for a package
+                PackagerCommandMakeCommand::class, //Create a new command for a package
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes

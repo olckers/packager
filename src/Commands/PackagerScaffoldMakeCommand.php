@@ -3,9 +3,13 @@
 namespace olckerstech\packager\src\Commands;
 
 use Illuminate\Console\Command;
+use olckerstech\packager\src\traits\commandParser;
+use olckerstech\packager\src\traits\packager;
 
 class PackagerScaffoldMakeCommand extends Command
 {
+    use packager;
+    use commandParser;
     /**
      * The name and signature of the console command.
      *
@@ -13,6 +17,7 @@ class PackagerScaffoldMakeCommand extends Command
      */
     protected $signature = 'packager:scaffold
         {name? : The name of the entity}
+        {--exclude=* : Specify items to skip}
         {--package= : The name of the package the scaffold is to be created in}';
 
     /**
@@ -39,27 +44,89 @@ class PackagerScaffoldMakeCommand extends Command
      */
     public function handle()
     {
-        $name = $this->argument('name');
+        if (!$this->parsePackage()) {
+            $this->error('FAILED. Could not create package');
+            return false;
+        }
         $options = $this->options();
+        $name = $this->argument('name');
 
-        if (!isset($name)) {
-            $this->line('You did not specify a name for the entity the scaffold is being created for. Please specify a name, examples - User, Tenant, Permission, etc');
-            $name = $this->ask('Entity name: ');
+        $display_table = config('packager.command_settings.table');
+
+        $headers = ['Command', 'Status'];
+        $table = [];
+
+        /*
+         * Display before messages
+         */
+        $this->parseMessages(config('packager.command_messages.package_scaffold_make_command.before'), $name);
+        /*
+         * Parse commands
+         */
+        $commands = config('packager.command_manifest.package_scaffold_make_command');
+
+        $bar = $this->output->createProgressBar(count($commands));
+
+        foreach ($commands as $command) {
+            $bar->advance();
+            $command = $this->parsePlaceholders($command, $name);
+            $table[] = [$command, $this->parseAndExecuteCommand($command, $options['exclude'])];
         }
 
-        if (isset($name)) {
-            if (!isset($options['package']) || $options['package'] === false) {
-                $package = $this->ask('Package name: ');
-            } else {
-                $package = $options['package'];
-            }
-            $this->info('Building scaffold for entity: ' . $name . ' in package: ' . $package);
+        $bar->finish();
+        $this->line(' Done');
 
+        /*
+         * Display table summary
+         */
+        if ($display_table) {
+            $this->table($headers, $table);
+        }
+        /*
+         * Display after messages
+         */
+        $this->parseMessages(config('packager.command_messages.package_scaffold_make_command.after'), $name);
 
-            $this->info('Scaffold completed. See table below for generated files and their locations.');
-        } else {
-            $this->error('Name for scaffold entity not provided. Operation aborted.');
+    }
+
+    /**
+     * Parse the package
+     *
+     * @return bool
+     */
+    public function parsePackage()
+    {
+        $name = $this->argument('name');
+
+        $this->packagerDirectory = $this->laravel->basePath(config('packager.packager_working_directory'));
+
+        if ($name !== null && $this->checkProvidedPackageName($name) && !$this->doesNotExistAndCantCreate()) {
+            $this->packageNameSpace = $this->packagerVendor . '\\' . $this->packagerPackage;
+            return true;
         }
 
+
+
+        return $this->manuallyGetPackageInformation();
+    }
+
+
+    public function manuallyGetPackageInformation()
+    {
+        if (!$this->getVendor()) {
+            return false;
+        }
+
+        if (!$this->getPackage($this->packagerVendor)) {
+            return false;
+        }
+
+        $this->packageNameSpace = $this->packagerVendor . '\\' . $this->packagerPackage;
+
+        if ($this->doesNotExistAndCantCreate()) {
+            return false;
+        }
+
+        return true;
     }
 }

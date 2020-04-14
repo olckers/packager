@@ -1,0 +1,14 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Example config file
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure your settings
+    */
+
+    'message' => 'Build something beautiful',
+];
