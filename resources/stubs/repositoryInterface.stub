@@ -1,6 +1,6 @@
 <?php
 
-namespace DummyPackageNamespace;
+namespace {{ packageNameSpace }};
 
 interface DummyClass
 {

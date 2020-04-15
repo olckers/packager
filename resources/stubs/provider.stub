@@ -4,6 +4,9 @@ namespace DummyPackageNamespace;
 
 use Illuminate\Support\ServiceProvider;
 
+use {{ packageNameSpace }}\Repositories\{{ entityName }}Repository;
+use {{ packageNameSpace }}\Repositories\Interfaces\{{ entityName }}RepositoryInterface;
+
 class DummyClass extends ServiceProvider
 {
     /**
@@ -16,6 +19,14 @@ class DummyClass extends ServiceProvider
         if ($this->app['config']->get('packager') === null) {
             $this->app['config']->set('packager', require __DIR__ . '/../config/{{ entityName }}.php');
         }
+
+        /*
+         * Bind repositories
+         */
+        $this->app->bind(
+            {{ entityName }}RepositoryInterface::class,
+            {{ entityName }}Repository::class
+        );
     }
 
     /**

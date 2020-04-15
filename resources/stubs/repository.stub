@@ -1,11 +1,11 @@
 <?php
 
-namespace DummyPackageNamespace;
+namespace {{ packageNameSpace }};
 
-use App\Repositories\Interfaces\DummyClassInterface;
+use {{ packageNameSpace }}\Interfaces\DummyClassInterface;
 /*
 * Classes are stubbed out to match interface and returns only true.
-* Repositories and interfaces need to be registered in the RepositoryServiceProvider
+* Repositories and interfaces need to be registered in a service provider
 */
 
 class DummyClass implements DummyClassInterface
