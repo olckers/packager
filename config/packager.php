@@ -50,7 +50,8 @@ return [
             'make:middleware name=%upperfirst%Middleware',
             'make:observer name=%upperfirst%Observer --model=%upperfirst%',
             'make:repository name=%upperfirst%Repository',
-            'make:repository-interface name=%upperfirst%RepositoryInterface'
+            'make:repository-interface name=%upperfirst%RepositoryInterface',
+            'make:command name=%upperfirst%CrudCommand'
         ],
         'package_make_command' => [
             'packager:provider name=%upperfirst%ServiceProvider --package=%packager%',
@@ -75,7 +76,7 @@ return [
             'packager:factory name=%upperfirst%Factory --package=%packager% --model=%upperfirst%',
             'packager:seeder name=%upperfirst%Seeder --package=%packager%',
             'packager:middleware name=%upperfirst% --package=%packager%',
-            'packager:command name=%upperfirst%Command --package=%packager%',
+            'packager:command name=%upperfirst%CrudCommand --package=%packager%',
 
         ],
         'package_scaffold_make_command' => [
@@ -99,7 +100,7 @@ return [
             'packager:factory name=%upperfirst%Factory --package=%packager% --model=%upperfirst%',
             'packager:seeder name=%upperfirst%Seeder --package=%packager%',
             'packager:middleware name=%upperfirst% --package=%packager%',
-            'packager:command name=%upperfirst%Command --package=%packager%',
+            'packager:command name=%upperfirst%CrudCommand --package=%packager%',
         ],
     ],
     'command_messages' => [
