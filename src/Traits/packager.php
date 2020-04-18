@@ -279,7 +279,7 @@ trait packager
         $searches = [
             ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyPackageNameSpace', 'DummyEntityName'],
             ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ packageNameSpace }}', '{{  entityName  }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}', '{{  entityName  }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}', '{{entityName}}'],
         ];
 
         if($this->packagerPackage === null){

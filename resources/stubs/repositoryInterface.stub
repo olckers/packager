@@ -5,74 +5,114 @@ namespace {{ packageNameSpace }};
 interface DummyClass
 {
     /**
-     * Get's item by it's ID
+     * Get item by it's ID (Uuid)
      *
-     * @param uuid
+     * @param string $id
+     * @param array $filters
+     * @return {{entityName}}|null
      */
-    public function get($id);
+    public function get(string $id, array $filters);
 
     /**
      * Get's a item by it's ID that has been deleted
      *
-     * @param uuid
+     * @param string $id
+     * @param array $filters
+     * @return {{entityName}}|null
      */
-    public function getTrashed($id);
+    public function getTrashed(string $id, array $filters);
+
+    /**
+     * Count number of records
+     *
+     * @param array $filters
+     * @return integer
+     */
+    public function count(array $filters);
+
+    /**
+     * Count number of trashed records
+     *
+     * @param array $filters
+     * @return integer
+     */
+    public function countTrashed(array $filters);
 
     /**
      * Get's all items that has not been deleted
      *
+     * @param array $filters
      * @return mixed
      */
-    public function all();
+    public function all(array $filters);
 
     /**
      * Get's all items that has been deleted.
      *
+     * @param array $filters
      * @return mixed
      */
-    public function allTrashedOnly();
+    public function allTrashed(array $filters);
 
     /**
      * Get's all items including deleted items.
      *
+     * @param array $filters
      * @return mixed
      */
-    public function allWithTrashed();
+    public function allWithTrashed(array $filters);
 
     /**
      * Deletes a item.
      *
-     * @param uuid
+     * @param string $id
+     * @param array $filters
+     * @param $mixed
+     * @return bool
      */
-    public function delete($id);
+    public function delete(string $id, array $filters, $mixed);
 
     /**
      * permanently deletes a item.
      *
-     * @param uuid
+     * @param string $id
+     * @param array $filters
+     * @param $mixed
+     * @return bool
      */
-    public function destroy($id);
+    public function destroy(string $id, array $filters, $mixed);
 
     /**
      * recovers a deleted item.
      *
-     * @param uuid
+     * @param string $id
+     * @param array $filters
+     * @param $mixed
+     * @return bool
      */
-    public function recover($id);
+    public function recover(string $id, array $filters, $mixed);
 
     /**
      * Updates a item.
      *
-     * @param uuid
-     * @param array
+     * @param string $id
+     * @param array $filters
+     * @param $mixed
+     * @return bool
      */
-    public function update($id, array $data);
+    public function update(string $id, array $filters, $mixed);
 
     /**
      * Creates a item.
      *
-     * @param uuid
-     * @param array
+     * @param {{entityName}} $model
      */
-    public function create($id, array $data);
+    public function create({{entityName}} $model);
+
+    /**
+     * Create new {{entityName}} model
+     *
+     * @return {{entityName}}
+     */
+    public function getNewModel();
 }

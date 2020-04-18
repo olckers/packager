@@ -2,17 +2,488 @@
 
 namespace {{ packageNameSpace }};
 
-use PHPUnit\Framework\TestCase;
+use Faker\Factory as FakeFactory;
+use olckerstech\core\src\Models\{{entityName}};
+use olckerstech\core\src\Repositories\{{entityName}}Repository;
+use Orchestra\Testbench\TestCase;
 
 class {{ class }} extends TestCase
 {
     /**
-     * A basic unit test example.
+     * Setup the test environment.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('migrate', ['--database' => 'testing'])->run();
+
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return void
      */
-    public function testExample()
+    protected function getEnvironmentSetUp($app)
     {
-        $this->assertTrue(true);
+        $app['config']->set('database.default', 'testing');
+    }
+
+    /**
+     * Get package providers.  At a minimum this is the package being tested, but also
+     * would include packages upon which our package depends, e.g. Cartalyst/Sentry
+     * In a normal app environment these would be added to the 'providers' array in
+     * the config/app.php file.
+     *
+     * @param \Illuminate\Foundation\Application $app
+     *
+     * @return array
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            'olckerstech\core\src\CoreServiceProvider'
+            //'Cartalyst\Sentry\SentryServiceProvider',
+            //'YourProject\YourPackage\YourPackageServiceProvider',
+        ];
+    }
+
+    /**
+     * Get package aliases.  In a normal app environment these would be added to
+     * the 'aliases' array in the config/app.php file.  If your package exposes an
+     * aliased facade, you should add the alias here, along with aliases for
+     * facades upon which your package depends, e.g. Cartalyst/Sentry.
+     *
+     * @param \Illuminate\Foundation\Application $app
+     *
+     * @return array
+     */
+    protected function getPackageAliases($app)
+    {
+        return [
+            //'Sentry' => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+            //'YourPackage' => 'YourProject\YourPackage\Facades\YourPackage',
+        ];
+    }
+
+    /**
+     * Test get function: field: ID Value: Uuid
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+        $faker = FakeFactory::create();
+
+        $getByUuid = $factory[2]->id;
+        $getByStub = $factory[4]->stub;
+        $getByName = $factory[6]->name;
+
+        //Test successful gets
+        $this->assertInstanceOf({{entityName}}::class, $repository->get($getByUuid), 'Get Model by Uuid:');
+        $this->assertInstanceOf({{entityName}}::class, $repository->get('', ['stub' => $getByStub]), 'Get Model by stub:');
+        $this->assertInstanceOf({{entityName}}::class, $repository->get('', ['name' => $getByName]), 'Get Model by name:');
+
+        //Test expected failures
+        $this->assertNull($repository->get($getByName), 'Try get {{entityName}} by name in id:');
+        //$this->assertNull($repository->get('', ['email' => $faker->email]), 'Try get {{entityName}} with non valid email:');
+
+    }
+
+    /**
+     * Test get trashed function: field: ID Value: Uuid
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getTrashedModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+        $faker = FakeFactory::create();
+
+        $getByUuid = $factory[2]->id;
+        $getByStub = $factory[4]->stub;
+        $getByName = $factory[6]->name;
+        $getInvalidByUuid = $factory[8]->id;
+
+        $factory[2]->delete();
+        $factory[4]->delete();
+        $factory[6]->delete();
+
+        //Test successful gets
+        $this->assertInstanceOf({{entityName}}::class, $repository->getTrashed($getByUuid), 'Get Model by Uuid:');
+        $this->assertInstanceOf({{entityName}}::class, $repository->getTrashed('', ['stub' => $getByStub]), 'Get Model by stub:');
+        $this->assertInstanceOf({{entityName}}::class, $repository->getTrashed('', ['name' => $getByName]), 'Get Model by name:');
+
+
+        //Test expected failures
+        $this->assertNull($repository->getTrashed($getInvalidByUuid), 'Get Model by Uuid:');
+        $this->assertNull($repository->getTrashed($getByName), 'Try get {{entityName}} by name in id:');
+        //$this->assertNull($repository->getTrashed('', ['email' => $faker->safeEmail]), 'Try get {{entityName}} with non valid email:');
+
+    }
+
+    /**
+     * Test get all function
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getModels()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+        $tempName = 'UPDATED';
+
+        $factory[1]->name = $tempName;
+        $factory[3]->name = $tempName;
+        $factory[5]->name = $tempName;
+
+        $this->assertTrue($repository->update('', null, $factory), 'Updating names to "' . $tempName . '":');
+        $this->assertCount(10, $repository->all(), 'Count all records:');
+        $this->assertCount(3, $repository->all(['name' => $tempName]), 'Count filtered records:');
+    }
+
+    /**
+     * Test get all trashed function
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getTrashedModels()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+        $tempName = 'UPDATED';
+
+        $factory[1]->name = $tempName;
+        $factory[2]->name = $tempName;
+
+        $this->assertTrue($repository->update('', null, $factory), 'Updating name to "' . $tempName . '" on models to be deleted:');
+
+        $this->assertTrue($repository->delete('', null, $factory[1]));
+        $this->assertTrue($repository->delete('', null, $factory[2]));
+        $this->assertTrue($repository->delete('', null, $factory[3]));
+
+        $this->assertCount(3, $repository->allTrashed(), 'Count trashed models:');
+        $this->assertCount(2, $repository->allTrashed(['name' => $tempName]), 'Count filtered Trashed models:');
+    }
+
+    /**
+     * Test get all including trashed function
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getModelsIncludingTrashed()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+        $tempName = 'UPDATED';
+
+        $factory[1]->name = $tempName;
+        $factory[2]->name = $tempName;
+        $factory[4]->name = $tempName;
+        $factory[5]->name = $tempName;
+
+        $this->assertTrue($repository->update('', null, $factory), 'Updating name to "' . $tempName . '" on models to be deleted:');
+
+        $this->assertTrue($repository->delete('', null, $factory[1]));
+        $this->assertTrue($repository->delete('', null, $factory[2]));
+        $this->assertTrue($repository->delete('', null, $factory[3]));
+
+        $this->assertCount(10, $repository->allWithTrashed(), 'Count all models:');
+        $this->assertCount(4, $repository->allWithTrashed(['name' => $tempName]), 'Count filtered models with Trashed items:');
+    }
+
+    /**
+     * Test delete model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     * @throws \Exception
+     */
+    public function deleteModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+
+        //Delete by model
+        ${{entityName}} = $factory->get(2);
+        $repository->delete('', null, ${{entityName}});
+        $this->assertCount(9, $repository->all(), 'Delete with Model:');
+        $this->assertSoftDeleted(${{entityName}});
+
+        //Delete by uuid
+        ${{entityName}} = $factory->get(4);
+        $repository->delete(${{entityName}}->id);
+        $this->assertCount(8, $repository->all(), 'Delete with Uuid:');
+        $this->assertSoftDeleted(${{entityName}});
+
+        //Delete by stub
+        ${{entityName}} = $factory->get(6);
+        $repository->delete('', ['stub' => ${{entityName}}->stub]);
+        $this->assertCount(7, $repository->all(), 'Delete with Stub:');
+        $this->assertSoftDeleted(${{entityName}});
+
+        //Delete by name
+        ${{entityName}} = $factory->get(8);
+        $repository->delete('', ['name' => ${{entityName}}->name]);
+        $this->assertCount(6, $repository->all(), 'Delete with Name:');
+        $this->assertSoftDeleted(${{entityName}});
+
+        //Delete collection
+        ${{entityName}}s = $repository->all();
+        $repository->delete('', null, ${{entityName}}s);
+        $this->assertCount(0, $repository->all(), 'Delete Collection');
+    }
+
+    /**
+     * Test destroy model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function destroyModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+
+        $this->assertTrue($repository->delete($factory[2]->id), 'Soft Deleting Model:');
+        $this->assertCount(10, $repository->allWithTrashed(), 'Testing SoftDelete:');
+
+        $this->assertTrue($repository->destroy($factory[3]->id), 'Destroying Active Model:');
+        $this->assertCount(9, $repository->allWithTrashed(), 'Testing ForceDelete on Active Model:');
+
+        $this->assertTrue($repository->destroy($factory[2]->id), 'Destroying Soft Deleted Model:');
+        $this->assertCount(8, $repository->allWithTrashed(), 'Testing ForceDelete on SoftDelete Model:');
+
+        $this->assertTrue($repository->destroy('', ['stub' => $factory[5]->stub]), 'Destroying with Stub:');
+        $this->assertCount(7, $repository->allWithTrashed(), 'Destroying with Stub:');
+
+        $this->assertTrue($repository->destroy('', null, $factory[1]), 'Destroying with Model:');
+        $this->assertCount(6, $repository->allWithTrashed(), 'Destroying with Model:');
+
+        $factory[8]->delete();
+        $factory[9]->delete();
+        $collection = $repository->allTrashed();
+        $this->assertTrue($repository->destroy('', null, $collection), 'Destroying with Collection:');
+        $this->assertCount(0, $repository->allTrashed(), 'Destroying with Collection:');
+
+    }
+
+    /**
+     * Test recover model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function recoverModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+
+        $this->assertCount(10, $repository->all(), 'Count Models before delete:');
+
+        $recoverByStub = $factory[2]->stub;
+        $recoverByName = $factory[4]->name;
+        $recoverByUuid = $factory[6]->id;
+        $recoverModel = $factory[1];
+
+        $factory[2]->delete();
+        $factory[4]->delete();
+        $factory[6]->delete();
+        $factory[1]->delete();
+        $factory[3]->delete();
+        $factory[5]->delete();
+
+        $this->assertCount(4, $repository->all(), 'Count Models after deleting 6 models:');
+        $this->assertCount(6, $repository->allTrashed(), 'Count Trashed Models:');
+
+        //Recover with Uuid
+        $this->assertTrue($repository->recover($recoverByUuid), 'Recover with Uuid:');
+        $this->assertCount(5, $repository->allTrashed());
+
+        //Recover with Email using null for Id
+        $this->assertTrue($repository->recover('', ['stub' => $recoverByStub]), 'Recover with Stub:');
+        $this->assertCount(4, $repository->allTrashed());
+
+        //Recover with Name using '' for Id
+        $this->assertTrue($repository->recover('', ['name' => $recoverByName]), 'Recover with Name:');
+        $this->assertCount(3, $repository->allTrashed());
+
+        //Recover with Model using '' for Id and null for Filters
+        $this->assertTrue($repository->recover('', null, $recoverModel), 'Recover with Model:');
+        $this->assertCount(2, $repository->allTrashed());
+
+        //Recover with ModelCollection using '' for Id and null for Filters
+        $recoverCollection = $repository->allTrashed();
+        $this->assertTrue($repository->recover('', null, $recoverCollection), 'Recover with Collection:');
+        $this->assertCount(0, $repository->allTrashed());
+    }
+
+    /**
+     * Test update model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function updateModel()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+
+        $repository = new {{entityName}}Repository();
+        $testName = 'UPDATED';
+
+        //Test update collection
+        $factory[0]->name = $testName;
+        $factory[1]->name = $testName;
+        $this->assertTrue($repository->update('', null, $factory));
+
+        //Test update model
+        $model = $factory->get(3, 1);
+        $model->name = $testName;
+        $this->assertTrue($repository->update('', null, $model), 'Update with Model:');
+        $this->assertEquals($testName, {{entityName}}::where('id', $model->id)->first()->name, 'Update with Model:');
+
+        //Test update via uuid
+        $model = $factory->get(4, 1);
+        $this->assertTrue($repository->update($model->id, null, ['name' => $testName]), 'Update with Uuid:');
+        $this->assertEquals($testName, {{entityName}}::where('id', $model->id)->first()->name, 'Update with Uuid:');
+
+        //Test update via email
+        $model = $factory->get(5, 1);
+        $this->assertTrue($repository->update('', ['stub' => $model->stub], ['name' => $testName]), 'Update with Stub:');
+        $testModel = $repository->get($model->id);
+        $this->assertInstanceOf({{entityName}}::class, $testModel, 'Checking model instanceOf:');
+        $this->assertEquals($testName, $testModel->name,'Checking model updated with stub as filter:');
+
+        //Check number of updated models
+        $this->assertCount(5, {{entityName}}::where('name', $testName)->get(), 'Check updated records:');
+
+    }
+
+    /**
+     * Test create model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function createModel()
+    {
+        $factory = factory({{entityName}}::class, 1)->make();
+        $repository = new {{entityName}}Repository();
+
+        $this->assertNull($factory[0]->id);
+        $this->assertTrue($repository->create($factory[0]));
+        $this->assertNotNull($factory[0]->id);
+    }
+
+    /**
+     * Test get new model
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function getNewModelInstance()
+    {
+        $repository = new {{entityName}}Repository();
+        $this->assertInstanceOf({{entityName}}::class, $repository->getNewModel());
+    }
+
+    /**
+     * Count active records in table
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function countRecordsInTable()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+
+        $this->assertEquals(10, $repository->count());
+
+        $factory[0]->delete();
+        $factory[3]->delete();
+
+        $this->assertEquals(8, $repository->count());
+    }
+
+    /**
+     * Count trashed records in table
+     *
+     * @return void
+     */
+    /**
+     * @test
+     * @group repository
+     * @group {{entityName}}
+     */
+    public function countTrashedRecordsInTable()
+    {
+        $factory = factory({{entityName}}::class, 10)->create();
+        $repository = new {{entityName}}Repository();
+
+        $this->assertEquals(0, $repository->countTrashed());
+
+        $factory[0]->delete();
+        $factory[3]->delete();
+
+        $this->assertEquals(2, $repository->countTrashed());
     }
 }
