@@ -1,7 +1,7 @@
 {
     "name": "olckerstech/packager",
     "description": "Automates Laravel package development",
-    "type": "library",
+    "type": "project",
     "license": "MIT",
     "authors": [
         {
@@ -10,6 +10,11 @@
         }
     ],
     "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "olckerstech\\packager\\": "src/"
+        }
+    },
     "require": {},
     "require-dev": {
         "orchestra/testbench": "5.1"
