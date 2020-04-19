@@ -2,7 +2,7 @@
     "name": "olckerstech/packager",
     "description": "Automates Laravel package development",
     "type": "library",
-    "license": "propriety",
+    "license": "MIT",
     "authors": [
         {
             "name": "Daniel Olckers",
