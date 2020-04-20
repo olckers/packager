@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "olckerstech\\packager\\PackagerServiceProvider"
+                "olckerstech\\packager\\src\\PackagerServiceProvider"
             ]
         }
     },
