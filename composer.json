@@ -16,6 +16,13 @@
         }
     },
     "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "olckerstech\\packager\\PackagerServiceProvider"
+            ]
+        }
+    },
     "require-dev": {
         "orchestra/testbench": "5.1"
     }
