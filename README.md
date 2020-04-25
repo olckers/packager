@@ -1,18 +1,20 @@
 ## **Laravel Packager**
 
 #### **About**
-Developer support library.
+Developer support library. v0.9.0-alpha
+
+Semantic Versioning 2.0.0 ( see https://semver.org/ )
+
 #### **Install**
 As Composer package
 
 `Composer require olckerstech/packager`
 #### **Configure**
 
-Add `olckerstech\core\src\CoreServiceProvider::class,` to the providers array in `config/app`.
+Add `olckerstech\core\src\PackagerServiceProvider::class,` to the providers array in `config/app` ONLY if you do not want to rely on package auto discovery.
 
 Run `php artisan vendor:publish --provider="olckerstech/packager" --tag="config"` to publish the config file.
 
-Run `php artisan vendor:publish --provider="olckerstech/packager" --tag="stubs"` to publish the stubs file.
 #### **Usage**
 Create entity scaffolding within application: 
 
