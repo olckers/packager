@@ -13,13 +13,17 @@
     "autoload": {
         "psr-4": {
             "olckerstech\\packager\\": "src/"
-        }
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
     },
     "require": {},
     "extra": {
         "laravel": {
             "providers": [
-                "olckerstech\\packager\\src\\PackagerServiceProvider"
+                "olckerstech\\packager\\PackagerServiceProvider"
             ]
         }
     },
