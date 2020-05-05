@@ -1,6 +1,6 @@
 <?php
 
-namespace olckerstech\packager\src\traits;
+namespace olckerstech\packager\Traits;
 
 trait packager
 {

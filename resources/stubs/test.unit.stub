@@ -3,8 +3,8 @@
 namespace {{ packageNameSpace }};
 
 use Faker\Factory as FakeFactory;
-use olckerstech\core\src\Models\{{entityName}};
-use olckerstech\core\src\Repositories\{{entityName}}Repository;
+use olckerstech\core\Models\{{entityName}};
+use olckerstech\core\Repositories\{{entityName}}Repository;
 use Orchestra\Testbench\TestCase;
 
 class {{ class }} extends TestCase
@@ -44,7 +44,7 @@ class {{ class }} extends TestCase
     protected function getPackageProviders($app)
     {
         return [
-            'olckerstech\core\src\CoreServiceProvider'
+            'olckerstech\core\CoreServiceProvider'
             //'Cartalyst\Sentry\SentryServiceProvider',
             //'YourProject\YourPackage\YourPackageServiceProvider',
         ];

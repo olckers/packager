@@ -1,10 +1,10 @@
 <?php
 
-namespace olckerstech\packager\src\Commands;
+namespace olckerstech\packager\Commands;
 
 use Illuminate\Console\Command;
-use olckerstech\packager\src\traits\commandParser;
-use olckerstech\packager\src\traits\packager;
+use olckerstech\packager\traits\commandParser;
+use olckerstech\packager\traits\packager;
 
 class PackagerMiddlewareMakeCommand extends Command
 {

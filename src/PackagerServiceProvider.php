@@ -1,34 +1,34 @@
 <?php
 
-namespace olckerstech\packager\src;
+namespace olckerstech\packager;
 
 use Illuminate\Support\ServiceProvider;
-use olckerstech\packager\src\Commands\PackagerChannelMakeCommand;
-use olckerstech\packager\src\Commands\PackagerCommandMakeCommand;
-use olckerstech\packager\src\Commands\PackagerComponentMakeCommand;
-use olckerstech\packager\src\Commands\PackagerControllerMakeCommand;
-use olckerstech\packager\src\Commands\PackagerFactoryMakeCommand;
-use olckerstech\packager\src\Commands\PackagerMakeCommand;
-use olckerstech\packager\src\Commands\PackagerEventMakeCommand;
-use olckerstech\packager\src\Commands\PackagerExceptionMakeCommand;
-use olckerstech\packager\src\Commands\PackagerJobMakeCommand;
-use olckerstech\packager\src\Commands\PackagerListenerMakeCommand;
-use olckerstech\packager\src\Commands\PackagerMailMakeCommand;
-use olckerstech\packager\src\Commands\PackagerMiddlewareMakeCommand;
-use olckerstech\packager\src\Commands\PackagerMigrationMakeCommand;
-use olckerstech\packager\src\Commands\PackagerModelMakeCommand;
-use olckerstech\packager\src\Commands\PackagerNotificationMakeCommand;
-use olckerstech\packager\src\Commands\PackagerObserverMakeCommand;
-use olckerstech\packager\src\Commands\PackagerPolicyMakeCommand;
-use olckerstech\packager\src\Commands\PackagerProviderMakeCommand;
-use olckerstech\packager\src\Commands\PackagerRepositoryInterfaceMakeCommand;
-use olckerstech\packager\src\Commands\PackagerRepositoryMakeCommand;
-use olckerstech\packager\src\Commands\PackagerRequestMakeCommand;
-use olckerstech\packager\src\Commands\PackagerResourceMakeCommand;
-use olckerstech\packager\src\Commands\PackagerScaffoldMakeCommand;
-use olckerstech\packager\src\Commands\PackagerSeederMakeCommand;
-use olckerstech\packager\src\Commands\PackagerTestMakeCommand;
-use olckerstech\packager\src\Commands\ScaffoldMakeCommand;
+use olckerstech\packager\Commands\PackagerChannelMakeCommand;
+use olckerstech\packager\Commands\PackagerCommandMakeCommand;
+use olckerstech\packager\Commands\PackagerComponentMakeCommand;
+use olckerstech\packager\Commands\PackagerControllerMakeCommand;
+use olckerstech\packager\Commands\PackagerFactoryMakeCommand;
+use olckerstech\packager\Commands\PackagerMakeCommand;
+use olckerstech\packager\Commands\PackagerEventMakeCommand;
+use olckerstech\packager\Commands\PackagerExceptionMakeCommand;
+use olckerstech\packager\Commands\PackagerJobMakeCommand;
+use olckerstech\packager\Commands\PackagerListenerMakeCommand;
+use olckerstech\packager\Commands\PackagerMailMakeCommand;
+use olckerstech\packager\Commands\PackagerMiddlewareMakeCommand;
+use olckerstech\packager\Commands\PackagerMigrationMakeCommand;
+use olckerstech\packager\Commands\PackagerModelMakeCommand;
+use olckerstech\packager\Commands\PackagerNotificationMakeCommand;
+use olckerstech\packager\Commands\PackagerObserverMakeCommand;
+use olckerstech\packager\Commands\PackagerPolicyMakeCommand;
+use olckerstech\packager\Commands\PackagerProviderMakeCommand;
+use olckerstech\packager\Commands\PackagerRepositoryInterfaceMakeCommand;
+use olckerstech\packager\Commands\PackagerRepositoryMakeCommand;
+use olckerstech\packager\Commands\PackagerRequestMakeCommand;
+use olckerstech\packager\Commands\PackagerResourceMakeCommand;
+use olckerstech\packager\Commands\PackagerScaffoldMakeCommand;
+use olckerstech\packager\Commands\PackagerSeederMakeCommand;
+use olckerstech\packager\Commands\PackagerTestMakeCommand;
+use olckerstech\packager\Commands\ScaffoldMakeCommand;
 
 class PackagerServiceProvider extends ServiceProvider
 {

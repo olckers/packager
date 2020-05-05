@@ -1,9 +1,9 @@
 <?php
 
-namespace olckerstech\packager\src\Commands;
+namespace olckerstech\packager\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use olckerstech\packager\src\traits\packager;
+use olckerstech\packager\traits\packager;
 
 class PackagerModelMakeCommand extends GeneratorCommand
 {

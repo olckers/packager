@@ -1,10 +1,10 @@
 <?php
 
-namespace olckerstech\packager\src\Commands;
+namespace olckerstech\packager\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use olckerstech\packager\src\traits\packager;
+use olckerstech\packager\traits\packager;
 
 class PackagerResourceMakeCommand extends GeneratorCommand
 {

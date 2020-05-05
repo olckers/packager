@@ -65,7 +65,7 @@ return [
             'packager:observer name=%upperfirst%Observer --model=%upperfirst% --package=%packager%',
             'packager:notification name=%upperfirst%Notification --package=%packager%',
             'packager:event name=%upperfirst%Event --package=%packager%',
-            'packager:listener name=%upperfirst%Listener --event=upperfirst%Event --package=%packager%',
+            'packager:listener name=%upperfirst%Listener --event=%upperfirst%Event --package=%packager%',
             'packager:exception name=%upperfirst%Exception --package=%packager% --report --render',
             'packager:channel name=%upperfirst%Channel --package=%packager%',
             'packager:test name=%upperfirst%Test --package=%packager%',

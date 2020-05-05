@@ -11,7 +11,7 @@ As Composer package
 `Composer require olckerstech/packager`
 #### **Configure**
 
-Add `olckerstech\core\src\PackagerServiceProvider::class,` to the providers array in `config/app` ONLY if you do not want to rely on package auto discovery.
+Add `olckerstech\core\PackagerServiceProvider::class,` to the providers array in `config/app` ONLY if you do not want to rely on package auto discovery.
 
 Run `php artisan vendor:publish --provider="olckerstech/packager" --tag="config"` to publish the config file.
 
