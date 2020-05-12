@@ -29,6 +29,7 @@ class PackagerRequestMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:request
             {name : Name of the Resource}
+            {--model= : Model name}
             {--package= : Fully qualified package name the Resource belongs to}';
 
     /**

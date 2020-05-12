@@ -3,11 +3,14 @@
 namespace olckerstech\packager\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use olckerstech\packager\traits\packager;
+use Illuminate\Support\Facades\Artisan;
+use olckerstech\packager\Traits\commandParser;
+use olckerstech\packager\Traits\packager;
 
 class PackagerRepositoryMakeCommand extends GeneratorCommand
 {
     use packager;
+    use commandParser;
     /**
      * The console command name.
      *
@@ -28,7 +31,9 @@ class PackagerRepositoryMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:repository
                     {name : Name of the Repository}
-                    {--package= : Fully qualified package name the Repository belongs to}';
+                    {--package= : Fully qualified package name the Repository belongs to}
+                    {--model= : Model name}
+                    {--trashed : Generate trashed model repository}';
 
     /**
      * The type of class being generated.
@@ -60,6 +65,18 @@ class PackagerRepositoryMakeCommand extends GeneratorCommand
 
         parent::handle();
 
+        /*
+         * Call interface make command
+         *
+        $options = ['name' => $this->argument('name').'Interface'];
+        $options += ['--package' => $this->getPackagerVendor().'/'.$this->getPackagerPackage()];
+
+        if(!is_null($this->option('model'))){
+            $options += ['--model' => $this->option('model')];
+        }
+
+        $this->executeCommand('packager:repository-interface', $options);
+*/
         if (!$this->copyAndDelete($this->argument('name'))) {
             $this->error('FAILED. Could either not move and/or delete the created files');
             return false;

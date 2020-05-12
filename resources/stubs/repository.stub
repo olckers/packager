@@ -2,10 +2,12 @@
 
 namespace {{ packageNameSpace }};
 
-use {{ packageNameSpace }}\Interfaces\DummyClassInterface;
 use Illuminate\Database\Eloquent\Collection;
-use olckerstech\core\Models\{{entityName}};
+use {{ basePackage }}\Models\{{ modelName }};
+use {{ packageNameSpace }}\Interfaces\DummyClassInterface;
+use olckerstech\core\Traits\SearchParser;
 use Ramsey\Uuid\Uuid;
+
 /*
 * Classes are stubbed out to match interface and returns only true.
 * Repositories and interfaces need to be registered in a service provider
@@ -13,23 +15,30 @@ use Ramsey\Uuid\Uuid;
 
 class DummyClass implements DummyClassInterface
 {
+    use SearchParser;
+
+    protected $allowedFilters = [
+        'name' => '',
+        'email' => '',
+        'password' => '',
+    ];
     /**
      * Get's item by it's ID
      *
      * @param string $id
      * @param array|null $filters
-     * @return {{entityName}}|null
+     * @return {{ modelName }}|null
      */
     public function get(string $id, array $filters = null)
     {
-        if(Uuid::isValid($id)) {
-            return {{entityName}}::where('id', $id)->first();
+        if (Uuid::isValid($id)) {
+            return {{ modelName }}::where('id', $id)->first();
         }
-        if(!empty($filters) && is_array($filters)){
+        if (!empty($filters) && is_array($filters)) {
             $get = $this->cleanArray($filters);
-            return {{entityName}}::where($get)->first();
+            return {{ modelName }}::where($get)->first();
         }
-        return null;
+        abort(400, 'Invalid parameters trying to get {{ modelName }}');
     }
 
     /**
@@ -37,18 +46,18 @@ class DummyClass implements DummyClassInterface
      *
      * @param string $id
      * @param array|null $filters
-     * @return {{entityName}}|null
+     * @return {{ modelName }}|null
      */
     public function getTrashed(string $id, array $filters = null)
     {
-        if(Uuid::isValid($id)) {
-            return {{entityName}}::onlyTrashed()->where('id', $id)->first();
+        if (Uuid::isValid($id)) {
+            return {{ modelName }}::onlyTrashed()->where('id', $id)->first();
         }
-        if(!empty($filters) && is_array($filters)){
+        if (!empty($filters) && is_array($filters)) {
             $get = $this->cleanArray($filters);
-            return {{entityName}}::onlyTrashed()->where($get)->first();
+            return {{ modelName }}::onlyTrashed()->where($get)->first();
         }
-        return null;
+        abort(400, 'Invalid parameters trying to get trashed {{ modelName }}');
     }
 
     /**
@@ -61,9 +70,9 @@ class DummyClass implements DummyClassInterface
     {
         if (is_array($filters)) {
             $array = $this->cleanArray($filters);
-            return {{entityName}}::where($array)->count();
+            return {{ modelName }}::where($array)->count();
         }
-        return {{entityName}}::count();
+        return {{ modelName }}::count();
     }
 
     /**
@@ -76,9 +85,9 @@ class DummyClass implements DummyClassInterface
     {
         if (is_array($filters)) {
             $array = $this->cleanArray($filters);
-            return {{entityName}}::onlyTrashed()->where($array)->count();
+            return {{ modelName }}::onlyTrashed()->where($array)->count();
         }
-        return {{entityName}}::onlyTrashed()->count();
+        return {{ modelName }}::onlyTrashed()->count();
     }
 
     /**
@@ -90,10 +99,13 @@ class DummyClass implements DummyClassInterface
     public function all(array $filters = null)
     {
         if (is_array($filters)) {
-            $array = $this->cleanArray($filters);
-            return {{entityName}}::where($array)->get();
+            if (array_key_exists('values', $filters)) {
+                $parsedFilters = $this->parseFilters($filters);
+                return {{ modelName }}::where($parsedFilters)->get();
+            }
+            return {{ modelName }}::where($filters)->get();
         }
-        return {{entityName}}::all();
+        return {{ modelName }}::all();
     }
 
     /**
@@ -105,10 +117,13 @@ class DummyClass implements DummyClassInterface
     public function allTrashed(array $filters = null)
     {
         if (is_array($filters)) {
-            $array = $this->cleanArray($filters);
-            return {{entityName}}::onlyTrashed()->where($array)->get();
+            if (array_key_exists('values', $filters)) {
+                $parsedFilters = $this->parseFilters($filters);
+                return {{ modelName }}::onlyTrashed()->where($parsedFilters)->get();
+            }
+            return {{ modelName }}::onlyTrashed()->where($filters)->get();
         }
-        return {{entityName}}::onlyTrashed()->get();
+        return {{ modelName }}::onlyTrashed()->get();
     }
 
     /**
@@ -121,9 +136,9 @@ class DummyClass implements DummyClassInterface
     {
         if (is_array($filters)) {
             $array = $this->cleanArray($filters);
-            return {{entityName}}::withTrashed()->where($array)->get();
+            return {{ modelName }}::withTrashed()->where($array)->get();
         }
-        return {{entityName}}::withTrashed()->get();
+        return {{ modelName }}::withTrashed()->get();
     }
 
     /**
@@ -137,36 +152,36 @@ class DummyClass implements DummyClassInterface
      */
     public function delete(string $id, array $filters = null, $mixed = null)
     {
-        if(!empty($id) && Uuid::isValid($id)){
-            if({{entityName}}::withTrashed()->where('id', $id)->delete()){
-                return true;
-            }
-            return false;
+        if (!empty($id) && Uuid::isValid($id)) {
+            return {{ modelName }}::destroy($id);
         }
 
-        if(!empty($filters) && is_array($filters)){
-            $recover = $this->cleanArray($filters);
-            if({{entityName}}::withTrashed()->where($recover)->delete()){
-                return true;
-            }
-            return false;
+        if (!empty($filters) && is_array($filters)) {
+            $delete = $this->cleanArray($filters);
+            return {{ modelName }}::where($delete)->delete();
         }
 
         if ($mixed instanceof Collection) {
-            if ({{entityName}}::withTrashed()->whereIn('id', $mixed->pluck('id'))->delete()) {
-                return true;
-            }
-            return false;
+            return {{ modelName }}::whereIn('id', $mixed->pluck('id'))->delete();
         }
 
-        if ($mixed instanceof {{entityName}}) {
-            if($mixed->delete()){
-                return true;
-            }
-            return false;
+        if ($mixed instanceof {{ modelName }}) {
+            return $mixed->delete();
         }
 
-        return false;
+        if(!empty($mixed) && is_array($mixed)){
+            $canDelete = true;
+            foreach($mixed as $delete){
+                if(!Uuid::isValid($delete)){
+                    $canDelete = false;
+                }
+            }
+            if($canDelete){
+                return {{ modelName }}::destroy($mixed);
+            }
+        }
+
+        abort(400, 'Invalid parameters trying to delete {{ modelName }}');
     }
 
     /**
@@ -179,36 +194,42 @@ class DummyClass implements DummyClassInterface
      */
     public function destroy(string $id, array $filters = null, $mixed = null)
     {
-        if(!empty($id) && Uuid::isValid($id)){
-            if({{entityName}}::withTrashed()->where('id', $id)->forceDelete()){
-                return true;
-            }
-            return false;
+        if (!empty($id) && Uuid::isValid($id)) {
+            return {{ modelName }}::withTrashed()->where('id', $id)->forceDelete();
         }
 
-        if(!empty($filters) && is_array($filters)){
+        if (!empty($filters) && is_array($filters)) {
             $destroy = $this->cleanArray($filters);
-            if({{entityName}}::withTrashed()->where($destroy)->forceDelete()){
-                return true;
-            }
-            return false;
+            return {{ modelName }}::withTrashed()->where($destroy)->forceDelete();
         }
 
         if ($mixed instanceof Collection) {
-            if ({{entityName}}::withTrashed()->whereIn('id', $mixed->pluck('id'))->forceDelete()) {
-                return true;
-            }
-            return false;
+            return {{ modelName }}::withTrashed()->whereIn('id', $mixed->pluck('id'))->forceDelete();
         }
 
-        if ($mixed instanceof {{entityName}}) {
-            if($mixed->forceDelete()){
-                return true;
-            }
-            return false;
+        if ($mixed instanceof {{ modelName }}) {
+            return $mixed->forceDelete();
         }
 
-        return false;
+        if(!empty($mixed) && is_array($mixed)){
+            $canDelete = true;
+            foreach($mixed as $delete){
+                if(!Uuid::isValid($delete)){
+                    $canDelete = false;
+                }
+            }
+            if($canDelete){
+                $i = 0;
+                foreach($mixed as $forceDeleteId){
+                    if({{ modelName }}::onlyTrashed()->where('id', $forceDeleteId)->forceDelete()){
+                        $i++;
+                    }
+                }
+                return ['count' => $i];
+            }
+        }
+
+        abort(400, 'Invalid parameters trying to destroy trashed {{ modelName }}');
     }
 
     /**
@@ -221,36 +242,24 @@ class DummyClass implements DummyClassInterface
      */
     public function recover(string $id, array $filters = null, $mixed = null)
     {
-        if(!empty($id) && Uuid::isValid($id)){
-            if({{entityName}}::withTrashed()->where('id', $id)->restore()){
-                return true;
-            }
-            return false;
+        if (!empty($id) && Uuid::isValid($id)) {
+            return {{ modelName }}::withTrashed()->where('id', $id)->restore();
         }
 
-        if(!empty($filters) && is_array($filters)){
+        if (!empty($filters) && is_array($filters)) {
             $recover = $this->cleanArray($filters);
-            if({{entityName}}::withTrashed()->where($recover)->restore()){
-                return true;
-            }
-            return false;
+            return {{ modelName }}::withTrashed()->where($recover)->restore();
         }
 
         if ($mixed instanceof Collection) {
-            if ({{entityName}}::withTrashed()->whereIn('id', $mixed->pluck('id'))->restore()) {
-                return true;
-            }
-            return false;
+            return {{ modelName }}::withTrashed()->whereIn('id', $mixed->pluck('id'))->restore();
         }
 
-        if ($mixed instanceof {{entityName}}) {
-            if($mixed->restore()){
-                return true;
-            }
-            return false;
+        if ($mixed instanceof {{ modelName }}) {
+            return $mixed->restore();
         }
 
-        return false;
+        abort(400, 'Invalid parameters trying to recover trashed {{ modelName }}');
     }
 
     /**
@@ -259,94 +268,65 @@ class DummyClass implements DummyClassInterface
      * @param string $id
      * @param array|null $filters
      * @param $mixed
-     * @return bool
+     * @return bool|Collection|null
      */
     public function update(string $id, array $filters = null, $mixed = null)
     {
-        if(!empty($id) && Uuid::isValid($id)){
+        if (!empty($id) && Uuid::isValid($id)) {
             $update = $this->cleanArray($mixed);
-            if({{entityName}}::where('id', $id)->update($update)){
-                return true;
-            }
-            return false;
+            return {{ modelName }}::where('id', $id)->update($update);
         }
 
-        if(!empty($filters) && is_array($filters)){
+        if (!empty($filters) && is_array($filters)) {
             $filters = $this->cleanArray($filters);
             $update = $this->cleanArray($mixed);
-            if({{entityName}}::where($filters)->update($update)){
-                return true;
-            }
-            return false;
+            return {{ modelName }}::where($filters)->update($update);
         }
 
         if ($mixed instanceof Collection) {
-            $return = true;
             foreach ($mixed as $model) {
                 if (!$model->save()) {
-                    $return = false;
+                    abort(400, 'Failed updating {{ modelName }} in Collection');
                 }
             }
-            return $return;
+            return $mixed;
         }
 
-        if ($mixed instanceof {{entityName}}) {
-            if($mixed->save()){
-                return true;
-            }
-            return false;
+        if ($mixed instanceof {{ modelName }}) {
+            return $mixed->save();
         }
 
-        return false;
+        abort(400, 'Invalid parameters trying to update {{ modelName }}');
     }
 
     /**
      * Creates a item.
      *
-     * @param {{entityName}} $model
+     * @param $mixed
      * @return bool
+     * @throws \Throwable
      */
-    public function create({{entityName}} $model)
+    public function create($mixed)
     {
-        return $model->save();
+        if (is_array($mixed)) {
+            $cleaned = $this->cleanArray($mixed);
+            return {{ modelName }}::create($cleaned);
+        }
+
+        if ($mixed instanceof {{ modelName }}) {
+            return $mixed->saveOrFail();
+        }
+
+        abort(400, 'Failed creating {{ modelName }}');
     }
 
     /**
      * Create new model
      *
-     * @return {{entityName}}
+     * @return {{ modelName }}
      */
     public function getNewModel()
     {
-        return new {{entityName}}();
-    }
-
-    /**
-     * Filters array for allowed values
-     *
-     * @param array $array
-     * @return array
-     */
-    private function cleanArray(array $array)
-    {
-        $allowed = [
-            'name' => '',
-            //'user_id' => '',
-            //'stub' => '',
-            //'password' => '',
-        ];
-        $return = [];
-
-        if(is_array($array)) {
-            foreach ($array as $key => $value) {
-                if (array_key_exists($key, $allowed)) {
-                   // if ($key === 'email' && !Validator::make(['email' => $value], ['email' => 'email:rfc,dns'])->validate()) {
-                   //     $value = '';
-                   // }
-                    $return += [$key => $value];
-                }
-            }
-        }
-        return $return;
+        return new {{ modelName }}();
     }
 }

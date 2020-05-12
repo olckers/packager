@@ -30,6 +30,7 @@ class PackagerProviderMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:provider
                     {name : Name of the Service Provider}
+                    {--model= : Model name}
                     {--package= : Fully qualified package name the Service Provider belongs to}';
 
     /**

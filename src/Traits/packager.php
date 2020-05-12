@@ -2,6 +2,8 @@
 
 namespace olckerstech\packager\Traits;
 
+use Illuminate\Support\Str;
+
 trait packager
 {
     protected $packagerDirectory = false;
@@ -277,27 +279,56 @@ trait packager
     protected function replaceNamespace(&$stub, $name)
     {
         $searches = [
-            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyPackageNameSpace', 'DummyEntityName'],
-            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ packageNameSpace }}', '{{  entityName  }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}', '{{entityName}}'],
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyPackageNameSpace', 'DummyEntityName', 'DummyModelName', 'DummyBasePackage'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ packageNameSpace }}', '{{ entityName }}', '{{ modelName }}', '{{ basePackage }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{packageNameSpace}}', '{{entityName}}', '{{modelName}}', '{{basePackage}}'],
         ];
 
         if($this->packagerPackage === null){
             $dummyEntityName = 'REPLACE';
         }else{
-            $dummyEntityName = $this->packagerPackage;
+            $dummyEntityName = Str::ucfirst($this->packagerPackage);
         }
 
+        $excludeSrcInNameSpaceModifier = $this->str_replace_once('src\\', '', $this->packageNameSpaceModifier);
 
+        if($this->option('model') === null){
+            $dummyModel = substr($name, strrpos($name, '\\') + 1 );//strstr($name, '\\');
+            $dummyModel = str_replace(Str::ucfirst(Str::singular($excludeSrcInNameSpaceModifier)), '', $dummyModel);
+        }else{
+            $dummyModel = Str::ucfirst($this->option('model'));
+        }
+
+        $dummyNameSpace = $this->getNamespace($name);
+        $dummyRootNameSpace = $this->rootNamespace();
+        $nameSpacedDummyUserModel = $this->userProviderModel();
+        $dummyPackageNameSpace = $this->packageNameSpace;
+        $packageNameSpaceModifier = $this->packageNameSpace . '\\' . $excludeSrcInNameSpaceModifier;
+
+/*
+        dd([
+            'name' => $name,
+            'DummyNamespace' => $dummyNameSpace,
+            'DummyRootNamespace' => $dummyRootNameSpace,
+            'NamespacedDummyUserModel' => $nameSpacedDummyUserModel,
+            'DummyPackageNameSpace' => $dummyPackageNameSpace,
+            'DummyEntityName' => $dummyEntityName,
+            'PackageNameSpaceModifier' => $packageNameSpaceModifier,
+            'ClassNameSpace' => $excludeSrcInNameSpaceModifier,
+            'ModelName' => $dummyModel
+        ]);
+*/
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
                 [
-                    $this->getNamespace($name),
-                    $this->rootNamespace(),
-                    $this->userProviderModel(),
-                    $this->packageNameSpace . '\\' . $this->packageNameSpaceModifier,
+                    $dummyNameSpace,
+                    $dummyRootNameSpace,
+                    $nameSpacedDummyUserModel,
+                    $packageNameSpaceModifier,
                     $dummyEntityName,
+                    $dummyModel,
+                    $dummyPackageNameSpace
                 ],
                 $stub
             );

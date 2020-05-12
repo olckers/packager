@@ -1,0 +1,84 @@
+<?php
+
+namespace olckerstech\core\Controllers\v1;
+
+use App\Http\Controllers\Controller;
+use olckerstech\core\Repositories\Interfaces\UserRepositoryInterface;
+use olckerstech\core\Requests\User\UserTrashedDestroyRequest;
+use olckerstech\core\Requests\User\UserTrashedGetRequest;
+use olckerstech\core\Requests\User\UserTrashedListRequest;
+use olckerstech\core\Requests\User\UserTrashedRecoverRequest;
+use olckerstech\core\Resources\DefaultEloquentCountReturn;
+use olckerstech\core\Resources\UserCollection as UserResourceCollection;
+use olckerstech\core\Resources\User as UserResource;
+
+class UserTrashedApiController extends Controller
+{
+    private $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param UserTrashedListRequest $request
+     * @param $stub
+     * @return UserResourceCollection
+     */
+    public function index(UserTrashedListRequest $request, $stub)
+    {
+        $validated = $request->validated();
+
+        if($request->isMethod('post')){
+            return new UserResourceCollection($this->userRepository->allTrashed($request->input('filters')));
+        }
+
+        return new UserResourceCollection($this->userRepository->allTrashed());
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param UserTrashedGetRequest $request
+     * @param $stub
+     * @param int $id
+     * @return UserResource
+     */
+    public function show(UserTrashedGetRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new UserResource($this->userRepository->getTrashed($id));
+    }
+
+
+    /**
+     * Recover the specified resource in storage.
+     *
+     * @param UserTrashedRecoverRequest $request
+     * @param $stub
+     * @param int $id
+     * @return DefaultEloquentCountReturn
+     */
+    public function update(UserTrashedRecoverRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new DefaultEloquentCountReturn($this->userRepository->destroy($id));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param UserTrashedDestroyRequest $request
+     * @param $stub
+     * @param int $id
+     * @return DefaultEloquentCountReturn
+     */
+    public function destroy(UserTrashedDestroyRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new DefaultEloquentCountReturn($this->userRepository->destroy($id));
+    }
+}

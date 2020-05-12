@@ -30,6 +30,7 @@ class PackagerModelMakeCommand extends GeneratorCommand
     protected $signature = 'packager:model
                 {name : Name of the Model}
                 {--package= : fully qualified package name the Model belongs to}
+                {--model= : Model name}
                 {--pivot : Create model for a pivot table}';
 
     /**

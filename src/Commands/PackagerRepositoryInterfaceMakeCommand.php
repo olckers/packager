@@ -28,6 +28,8 @@ class PackagerRepositoryInterfaceMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:repository-interface
                     {name : Name of the Repository}
+                    {--model= : Model name}
+                    {--trashed : Generate trashed model repository}
                     {--package= : Fully qualified package name the Repository-Interface belongs to}';
 
     /**

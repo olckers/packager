@@ -29,6 +29,7 @@ class PackagerEventMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:event
             {name : Name of the Event}
+            {--model= : Model name}
             {--package= : Fully qualified package name the Event belongs to}';
 
     /**

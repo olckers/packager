@@ -32,6 +32,7 @@ class PackagerExceptionMakeCommand extends GeneratorCommand
             {name : Name of the Exception}
             {--package= : Fully qualified package name the Exception belongs to}
             {--render : Create the exception with an empty render method}
+            {--model= : Model name}
             {--report : Create the exception with an empty report method}';
 
     /**

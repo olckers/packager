@@ -29,6 +29,7 @@ class PackagerChannelMakeCommand extends GeneratorCommand
      */
     protected $signature = 'packager:channel
             {name : Name of the Channel}
+            {--model= : Model name}
             {--package= : Fully qualified package name the Channel belongs to}';
 
     /**

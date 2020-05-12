@@ -2,6 +2,8 @@
 
 namespace {{ packageNameSpace }};
 
+use {{ basePackage }}\Models\{{ modelName }};
+
 interface DummyClass
 {
     /**
@@ -9,7 +11,7 @@ interface DummyClass
      *
      * @param string $id
      * @param array $filters
-     * @return {{entityName}}|null
+     * @return {{ modelName }}|null
      */
     public function get(string $id, array $filters);
 
@@ -18,7 +20,7 @@ interface DummyClass
      *
      * @param string $id
      * @param array $filters
-     * @return {{entityName}}|null
+     * @return {{ modelName }}|null
      */
     public function getTrashed(string $id, array $filters);
 
@@ -105,14 +107,15 @@ interface DummyClass
     /**
      * Creates a item.
      *
-     * @param {{entityName}} $model
+     * @param $mixed
      */
-    public function create({{entityName}} $model);
+    public function create($mixed);
 
     /**
-     * Create new {{entityName}} model
+     * Create new user model
      *
-     * @return {{entityName}}
+     * @return {{ modelName }}
      */
     public function getNewModel();
+
 }

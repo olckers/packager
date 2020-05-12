@@ -33,6 +33,7 @@ class PackagerListenerMakeCommand extends GeneratorCommand
             {name : Name of the Listener}
             {--package= : Fully qualified package name the Listener belongs to}
             {--event= : The event class being listened for}
+            {--model= : Model name}
             {--queued : Indicates the event listener should be queued}';
 
     /**

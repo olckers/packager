@@ -31,6 +31,7 @@ class PackagerNotificationMakeCommand extends GeneratorCommand
             {name : Name of the Notification}
             {--package= : Fully qualified package name the Notification belongs to}
             {--markdown= : Create a new Markdown template for the notification}
+            {--model= : Model name}
             {--force : Create the class even if the notification already exists}';
 
     /**

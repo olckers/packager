@@ -1,0 +1,99 @@
+<?php
+
+namespace olckerstech\core\Controllers\v1;
+
+use App\Http\Controllers\Controller;
+
+use olckerstech\core\Repositories\Interfaces\UserRepositoryInterface;
+use olckerstech\core\Requests\User\UserCreateRequest;
+use olckerstech\core\Requests\User\UserDeleteRequest;
+use olckerstech\core\Requests\User\UserGetRequest;
+use olckerstech\core\Requests\User\UserListRequest;
+use olckerstech\core\Requests\User\UserUpdateRequest;
+use olckerstech\core\Resources\UserCollection as UserResourceCollection;
+use olckerstech\core\Resources\User as UserResource;
+use olckerstech\core\Resources\DefaultEloquentCountReturn;
+
+class UserApiController extends Controller
+{
+    private $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param UserListRequest $request
+     * @param $stub
+     * @return UserResourceCollection
+     */
+    public function index(UserListRequest $request, $stub)
+    {
+        $validated = $request->validated();
+
+        if($request->isMethod('post')){
+            return new UserResourceCollection($this->userRepository->all($request->input('filters')));
+        }
+
+        return new UserResourceCollection($this->userRepository->all());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param UserCreateRequest $request
+     * @param $stub
+     * @return UserResource
+     */
+    public function store(UserCreateRequest $request, $stub)
+    {
+        $validated = $request->validated();
+        return new UserResource($this->userRepository->create($request->all()));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param UserGetRequest $request
+     * @param $stub
+     * @param $user
+     * @return UserResource
+     */
+    public function show(UserGetRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new UserResource($this->userRepository->get($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UserUpdateRequest $request
+     * @param $stub
+     * @param string $id
+     * @return DefaultEloquentCountReturn
+     */
+    public function update(UserUpdateRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new DefaultEloquentCountReturn($this->userRepository->update($id,null,$request->all()));
+    }
+
+    /**
+     * Remove the specified resource from storage. SOFT DELETE
+     *
+     * @param UserDeleteRequest $request
+     * @param $stub
+     * @param int $id
+     * @return DefaultEloquentCountReturn
+     */
+    public function destroy(UserDeleteRequest $request, $stub, $id)
+    {
+        $validated = $request->validated();
+        return new DefaultEloquentCountReturn($this->userRepository->delete($id));
+       // return response()->json(['message' => 'Page or resource not found'], 404);
+    }
+}
