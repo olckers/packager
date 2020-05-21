@@ -28,6 +28,8 @@ use olckerstech\packager\Commands\PackagerResourceMakeCommand;
 use olckerstech\packager\Commands\PackagerScaffoldMakeCommand;
 use olckerstech\packager\Commands\PackagerSeederMakeCommand;
 use olckerstech\packager\Commands\PackagerTestMakeCommand;
+use olckerstech\packager\Commands\RepositoryInterfaceMakeCommand;
+use olckerstech\packager\Commands\RepositoryMakeCommand;
 use olckerstech\packager\Commands\ScaffoldMakeCommand;
 
 class PackagerServiceProvider extends ServiceProvider
@@ -80,6 +82,8 @@ class PackagerServiceProvider extends ServiceProvider
                 PackagerSeederMakeCommand::class, //Create a new seeder for a package
                 PackagerMiddlewareMakeCommand::class, //Create a new middleware class for a package
                 PackagerCommandMakeCommand::class, //Create a new command for a package
+                RepositoryMakeCommand::class, //Creates a new repository
+                RepositoryInterfaceMakeCommand::class //Creates a new repository interface
             ]);
             /*
              * OVERRIDE Illuminate\Foundation\Console commands for package purposes
